@@ -1,0 +1,5 @@
+rest:
+  ssl: true
+  host: lab.d2t.co
+  port: 443
+  nameSpace: /server9

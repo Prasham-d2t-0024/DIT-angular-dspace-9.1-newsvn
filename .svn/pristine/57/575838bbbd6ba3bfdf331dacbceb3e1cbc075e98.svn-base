@@ -1,0 +1,9 @@
+@if (logo) {
+  <div class="dso-logo">
+    <img [src]="logo._links.content.href" class="w-100 img-fluid" [attr.alt]="alternateText ? alternateText : null" (error)="errorHandler($event)"/>
+  </div>
+} @else {
+  <div class="dso-logo">
+    <img [src]="holderSource" class="w-100 img-fluid" [attr.alt]="alternateText ? alternateText : null"/>
+  </div>
+}

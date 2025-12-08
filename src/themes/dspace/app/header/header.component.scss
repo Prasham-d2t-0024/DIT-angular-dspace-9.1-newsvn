@@ -1,0 +1,50 @@
+:host {
+  #main-site-header {
+    min-height: var(--ds-header-height);
+
+    @include media-breakpoint-up(md) {
+      height: var(--ds-header-height);
+    }
+
+    background-color: var(--ds-header-bg);
+
+    &-container {
+      min-height: var(--ds-header-height);
+    }
+  }
+
+  img#header-logo {
+    height: var(--ds-header-logo-height);
+  }
+
+  button#navbar-toggler {
+    color: var(--ds-header-icon-color);
+
+    &:hover, &:focus {
+      color: var(--ds-header-icon-color-hover);
+    }
+  }
+
+  .navbar-brand2{
+    display: inline-block;
+    // padding-left: 0.3125rem;
+    // padding-right: 0.3125rem;
+    // padding: 0rem 2.8125rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+    height: 80px;
+    transform: scale(0.65);
+  }
+  
+  .navbar-brand{
+    display: inline-block !important;
+    padding: 0rem 1.2125rem 0rem 0rem !important;
+    font-size: 1.25rem !important;
+    line-height: inherit !important;
+    white-space: nowrap !important;
+    border-right: 2px solid rgb(215, 215, 215);
+    margin-right: 0rem !important;
+  }
+
+}

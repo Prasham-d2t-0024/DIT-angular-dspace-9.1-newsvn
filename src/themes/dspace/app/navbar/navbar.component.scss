@@ -1,0 +1,11 @@
+:host {
+
+}
+
+.link-hover-effect{
+    text-decoration: none !important;
+}
+.link-hover-effect :hover{
+    color: var(--ds-secondary-color) !important;
+    text-decoration: none !important;
+}

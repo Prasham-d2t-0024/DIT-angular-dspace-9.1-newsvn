@@ -1,0 +1,9 @@
+<div class="container aboutus-container">
+    <div class="row">
+        <div class="col-12 mx-auto middleside">
+            <div class="mt-4 centered-content">
+                <div><div [innerHTML]="getSanitizedHtml()"></div></div>
+            </div>
+        </div>
+    </div>
+</div>

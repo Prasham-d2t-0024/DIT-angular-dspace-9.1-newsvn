@@ -1,0 +1,23 @@
+{
+    "homePageLayoutConfig": {
+        "showBanner": false,
+        "showCarousel": false
+    },
+    "images": {
+        "logo": "assets/images/dspace-logo.png",
+        "favicon": "assets/dspace/images/favicons/favicon.ico",
+        "homepage": "assets/images/home-page-main.png",
+        "login": "assets/images/dspace-logo.jpg"
+    },
+    "imageSizes": {
+        "logo": {
+            "width": "110px",
+            "height": "40px"
+        },
+        "homepage": {
+            "width": "100vw",
+            "height": "49vh",
+            "searchBarDistanceFromTop": "16vh"
+        }
+    }
+}

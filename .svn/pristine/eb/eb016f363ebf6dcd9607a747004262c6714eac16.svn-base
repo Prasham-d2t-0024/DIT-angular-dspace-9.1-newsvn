@@ -1,0 +1,320 @@
+import {
+  AsyncPipe,
+  CommonModule,
+  isPlatformBrowser,
+  JsonPipe,
+  NgClass,
+} from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+import { Item } from '../../../../../../core/shared/item.model';
+import { ViewMode } from '../../../../../../core/shared/view-mode.model';
+import { getItemPageRoute } from '../../../../../../item-page/item-page-routing-paths';
+import { ThemedThumbnailComponent } from '../../../../../../thumbnail/themed-thumbnail.component';
+import { ThemedBadgesComponent } from '../../../../../object-collection/shared/badges/themed-badges.component';
+import { ItemSearchResult } from '../../../../../object-collection/shared/item-search-result.model';
+import { listableObjectComponent } from '../../../../../object-collection/shared/listable-object/listable-object.decorator';
+import { TruncatableComponent } from '../../../../../truncatable/truncatable.component';
+import { TruncatablePartComponent } from '../../../../../truncatable/truncatable-part/truncatable-part.component';
+import { SearchResultListElementComponent } from '../../../search-result-list-element.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { ItemDataService } from 'src/app/core/data/item-data.service';
+import { APP_CONFIG, AppConfig } from 'src/config/app-config.interface';
+import { DSONameService } from 'src/app/core/breadcrumbs/dso-name.service';
+import { TruncatableService } from 'src/app/shared/truncatable/truncatable.service';
+import { BookmarkDataService } from 'src/app/core/data/bookmark-data.service';
+import { getFirstCompletedRemoteData } from 'src/app/core/shared/operators';
+import { RemoteData } from 'src/app/core/data/remote-data';
+import { Bookmark } from 'src/app/core/shared/bookmark.model';
+import { NotificationsService } from 'src/app/shared/notifications/notifications.service';
+import { first, Observable, of, take } from 'rxjs';
+import { NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { FeatureID } from 'src/app/core/data/feature-authorization/feature-id';
+import { AuthorizationDataService } from 'src/app/core/data/feature-authorization/authorization-data.service';
+import { AuthService } from 'src/app/core/auth/auth.service';
+import { Bitstream } from 'src/app/core/shared/bitstream.model';
+import { BitstreamDataService } from 'src/app/core/data/bitstream-data.service';
+import { hasValue } from 'src/app/shared/empty.util';
+import { followLink } from 'src/app/shared/utils/follow-link-config.model';
+import { PaginatedList } from 'src/app/core/data/paginated-list.model';
+import { HostWindowService } from 'src/app/shared/host-window.service';
+
+@listableObjectComponent('PublicationSearchResult', ViewMode.ListElement)
+@listableObjectComponent(ItemSearchResult, ViewMode.ListElement)
+@Component({
+  selector: 'ds-item-search-result-list-element',
+  styleUrls: ['./item-search-result-list-element.component.scss'],
+  templateUrl: './item-search-result-list-element.component.html',
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    NgClass,
+    RouterLink,
+    ThemedBadgesComponent,
+    ThemedThumbnailComponent,
+    TruncatableComponent,
+    TruncatablePartComponent,
+    TranslateModule,
+    NgbModule,
+    FormsModule,
+    JsonPipe,
+    CommonModule,
+    NgbDropdownModule
+  ],
+  providers: [
+    BookmarkDataService,
+    ItemDataService
+  ]
+})
+/**
+ * The component for displaying a list element for an item search result of the type Publication
+ */
+export class ItemSearchResultListElementComponent extends SearchResultListElementComponent<ItemSearchResult, Item> implements OnInit {
+  /**
+   * Route to the item's page
+   */
+  itemPageRoute: string;
+  cirtation = [];
+  bookmarkitem: any;
+  isAuthorized$: Observable<boolean> = of(false);
+  cirteanselection = 'APA';
+  bitstreamLength: number;
+  objbistem: Bitstream;
+  isMobileView:boolean = false;
+
+  constructor(
+    protected bitstreamDataService: BitstreamDataService,
+    public itemDataService: ItemDataService,
+    protected truncatableService: TruncatableService,
+    public dsoNameService: DSONameService,
+    protected cdRef: ChangeDetectorRef,
+    protected bookmarkdataservice: BookmarkDataService,
+    public notificationsService: NotificationsService,
+    public authService: AuthService,
+    public windowService: HostWindowService,
+    @Inject(PLATFORM_ID) private platformId: any,
+    @Inject(APP_CONFIG) protected appConfig?: AppConfig,
+
+  ) {
+    super(truncatableService, dsoNameService, appConfig);
+    if (isPlatformBrowser(this.platformId)) {
+      this.windowService.isXsOrSm().pipe(
+        first()
+      ).subscribe((isMobile) => {
+        this.isMobileView = isMobile;
+      });
+    }
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.isAuthorized$ = this.authService.isAuthenticated();
+    this.showThumbnails = this.showThumbnails ?? this.appConfig.browseBy.showThumbnails;
+    this.itemPageRoute = getItemPageRoute(this.dso);
+  }
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.findBookMark();
+      this.getpdf();
+    }
+  }
+
+  findBookMark() {
+    this.isAuthorized$.pipe(take(1)).subscribe((isautho: Boolean) => {
+      if (isautho) {
+        this.bookmarkdataservice.findBookmarkByuserofItem(this.object.indexableObject.id).pipe(getFirstCompletedRemoteData()).subscribe((rd) => {
+          if (rd.hasSucceeded) {
+            this.bookmarkitem = rd.payload;
+          }
+        })
+
+      }
+    })
+
+  }
+
+  savebookmark() {
+    if (this.bookmarkitem != undefined && this.bookmarkitem.id) {
+      let newStatus = (this.bookmarkitem.status === 'active') ? 'dactive' : 'active';
+      let payload = {
+        ...this.bookmarkitem,
+        status: newStatus,
+        itemRest: { uuid: this.bookmarkitem.itemRest?.uuid },
+        submitterRest: { uuid: this.bookmarkitem.submitterRest?.uuid }
+      };
+      this.bookmarkdataservice.put(payload).pipe(
+        getFirstCompletedRemoteData()
+      ).subscribe((rd: RemoteData<Bookmark>) => {
+        if (rd.hasSucceeded) {
+          this.bookmarkitem = rd.payload;
+          this.cdRef.detectChanges();
+          if (this.bookmarkitem.status === 'active') {
+            this.notificationsService.success('Bookmark this item  successfully!');
+          } else {
+            this.notificationsService.success('UnBookmark this item  successfully!');
+          }
+
+        } else {
+          this.notificationsService.error('An error occurred while Bookmarking this item! ');
+        }
+      })
+    } else {
+      let data = {
+        "itemRest": {
+          "uuid": this.object.indexableObject.uuid
+        }
+      };
+      const bookmarkToCreate = Object.assign(new Bookmark(), data);
+      this.bookmarkdataservice.create(bookmarkToCreate).pipe(
+        getFirstCompletedRemoteData()
+      ).subscribe((rd: RemoteData<Bookmark>) => {
+
+        if (rd.hasSucceeded) {
+          this.bookmarkitem = rd.payload;
+          //this.CommentFormGroup.reset();
+          //this.getCommentList();
+          this.cdRef.detectChanges();
+          this.notificationsService.success('Bookmark this item  successfully!');
+        } else {
+          this.notificationsService.error('An error occurred while Bookmarking this item! ');
+        }
+      })
+    }
+  }
+
+  dowloadFile() {
+    let URL = this.itemDataService.downloadCitetion(this.object.indexableObject.id, this.cirteanselection);
+    const link = document.createElement('a');
+    link.href = URL;
+    link.download = URL;
+    link.click()
+  }
+
+  copyInputMessage(inputElement: HTMLDivElement) {
+    const range = document.createRange();
+    range.selectNode(inputElement);
+
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      document.execCommand('copy');
+
+      // Clear the selection to prevent visual disruption
+      selection.removeAllRanges();
+    }
+  }
+
+  isModalOpen: boolean = false;
+  openModal() {
+    this.itemDataService.getCitetion(this.object.indexableObject.id).pipe().subscribe((data) => {
+      if (!!data && data.statusCode === 200 && !!data.payload) {
+        this.cirtation = Object.entries(data.payload);
+        this.isModalOpen = true;
+        this.cdRef.detectChanges();
+      }
+    });
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  getpdf() {
+    this.bitstreamDataService.findAllByItemAndBundleName(this.object.indexableObject, 'ORIGINAL', {
+      currentPage: 1,
+      elementsPerPage: 2
+    }, true, true, followLink('format')).pipe(
+      getFirstCompletedRemoteData(),
+    ).subscribe((bitstreamsRD: RemoteData<PaginatedList<Bitstream>>) => {
+      if (bitstreamsRD.errorMessage) {
+
+      } else if (hasValue(bitstreamsRD.payload)) {
+        this.bitstreamLength = bitstreamsRD.payload.page.length;
+        if (bitstreamsRD.payload.page.length > 0) {
+          this.objbistem = bitstreamsRD.payload.page[0];
+        }
+      }
+    });
+
+  }
+  openpdf() {
+    window.open("/bitstreams/" + this.objbistem.id + "/viewer?itemid=" + this.object.indexableObject.id)
+
+  }
+
+  // formatCustomDate(input: string): string {
+
+  //   if(input.length == 4) return input;
+
+  //   const separator = input.includes('/') ? '/' : input.includes('-') ? '-' : null;
+  //   if (!separator){
+  //     // console.log("seperator is not present", input);
+  //     return input;
+  //   } 
+
+  //   const parts = input.split(separator).map(part => part.trim());
+
+  //   // Ensure all parts are digits
+  //   if (parts.some(part => isNaN(Number(part)))){
+  //     // console.log("Some parts of date is not a number",input);
+  //     return input;
+  //   } 
+
+  //   // Case: "00/00/0000" or "00-00-0000"
+  //   if (parts.every(part => part === '00' || part === '0000')){
+  //     // console.log(`date:${input} is invalid`);
+  //     return input;
+  //   } 
+
+  //   let day: string, month: string, year: string;
+
+  //   // Handle formats like dd/MM/yyyy, yyyy/MM/dd, etc. Try to infer meaning
+  //   if (parts[0].length === 4) {
+  //     // yyyy/MM/dd or yyyy-MM-dd
+  //     year = parts[0];
+  //     month = parts[1];
+  //     day = parts[2];
+  //   } else if (parts[2]?.length === 4) {
+  //     // dd/MM/yyyy
+  //     day = parts[0];
+  //     month = parts[1];
+  //     year = parts[2];
+  //   } else {
+  //     return input;
+  //   }
+
+  //   // Case: Day is 00 => Return MM/YYYY
+  //   if (day === '00') {
+  //     if (month === '00' || (year === '0000' || year === '000')){
+  //       // console.log("every part is 00 of this date", input);
+  //       return input;
+  //     } 
+  //     // return `${month.padStart(2, '0')}/${year}`;
+  //     return input;
+  //   }
+
+  //   if(input.includes('00/')){
+  //     return input;
+  //   }
+
+  //   // Validate other fields (you can add more validation if needed)
+  //   // if (Number(month) < 1 || Number(month) > 12 || Number(day) < 1 || Number(day) > 31 || year.length !== 4) {
+  //   if (year.length !== 4) {
+  //     // console.log("invalid year",input);
+  //     return input;
+  //   }
+
+  //   return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
+  // }
+
+}
