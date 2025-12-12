@@ -49,6 +49,7 @@ import { ItemPageComponent } from '../simple/item-page.component';
 import { ItemVersionsComponent } from '../versions/item-versions.component';
 import { ItemVersionsNoticeComponent } from '../versions/notice/item-versions-notice.component';
 import { ThemedFullFileSectionComponent } from './field-components/file-section/themed-full-file-section.component';
+import { FeatureID } from 'src/app/core/data/feature-authorization/feature-id';
 
 /**
  * This component renders a full item page.
@@ -59,7 +60,6 @@ import { ThemedFullFileSectionComponent } from './field-components/file-section/
   selector: 'ds-base-full-item-page',
   styleUrls: ['./full-item-page.component.scss'],
   templateUrl: './full-item-page.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [fadeInOut],
   imports: [
     AsyncPipe,
@@ -89,6 +89,7 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
    * True when the itemRD has been originated from its workspaceite/workflowitem, false otherwise.
    */
   fromSubmissionObject = false;
+  isAdmin: boolean = false;
 
   subs = [];
 
@@ -110,14 +111,17 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
   /*** AoT inheritance fix, will hopefully be resolved in the near future **/
   ngOnInit(): void {
     super.ngOnInit();
+    this.authorizationService.isAuthorized(FeatureID.AdministratorOf).subscribe((resp) => {
+      this.isAdmin = resp;
+    })
     this.metadata$ = this.itemRD$.pipe(
       map((rd: RemoteData<Item>) => rd.payload),
       filter((item: Item) => hasValue(item)),
       map((item: Item) => item.metadata));
 
-    this.subs.push(this.route.data.subscribe((data: Data) => {
-      this.fromSubmissionObject = hasValue(data.wfi) || hasValue(data.wsi);
-    }),
+      this.subs.push(this.route.data.subscribe((data: Data) => {
+        this.fromSubmissionObject = hasValue(data.wfi) || hasValue(data.wsi);
+      }),
     );
   }
 
@@ -126,6 +130,20 @@ export class FullItemPageComponent extends ItemPageComponent implements OnInit, 
    */
   back() {
     this._location.back();
+  }
+  showMetadataToThisUsers(metadataKey: string): boolean {
+    if(this.isAdmin) {
+      return true;
+    }
+    const hiddenMetadataForNormalUsers = [
+      'obps.contact.contactname',
+      'obps.contact.contactemail',
+      'obps.contact.contactorcid',
+      'dc.date.accessioned',
+      'dc.date.available',
+      'dc.description.provenance'
+    ]
+    return !hiddenMetadataForNormalUsers.includes(metadataKey);
   }
 
   ngOnDestroy() {

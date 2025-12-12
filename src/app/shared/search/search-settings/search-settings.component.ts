@@ -16,6 +16,7 @@ import { SearchConfigurationService } from '../../../core/shared/search/search-c
 import { SEARCH_CONFIG_SERVICE } from '../../../my-dspace-page/my-dspace-configuration.service';
 import { PageSizeSelectorComponent } from '../../page-size-selector/page-size-selector.component';
 import { SidebarDropdownComponent } from '../../sidebar/sidebar-dropdown.component';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'ds-base-search-settings',
@@ -27,6 +28,7 @@ import { SidebarDropdownComponent } from '../../sidebar/sidebar-dropdown.compone
     PageSizeSelectorComponent,
     SidebarDropdownComponent,
     TranslateModule,
+    JsonPipe
   ],
 })
 

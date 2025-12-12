@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngVar="(itemRD$ | async) as itemRD">
+<div class="container-fluid pt-2" *ngVar="(itemRD$ | async) as itemRD">
   @if (itemRD?.hasSucceeded) {
     <div class="item-page" @fadeInOut>
       @if (itemRD?.payload; as item) {
@@ -23,11 +23,13 @@
                   <tbody>
                     @for (mdEntry of (metadata$ | async) | keyvalue; track mdEntry) {
                       @for (mdValue of mdEntry.value; track mdValue) {
-                        <tr>
-                          <td>{{mdEntry.key}}</td>
-                          <td>{{mdValue.value}}</td>
-                          <td>{{mdValue.language}}</td>
-                        </tr>
+                        @if(showMetadataToThisUsers(mdEntry.key)) {
+                          <tr>
+                            <td>{{mdEntry.key}}</td>
+                            <td>{{mdValue.value}}</td>
+                            <td>{{mdValue.language}}</td>
+                          </tr>
+                        }
                       }
                     }
                   </tbody>

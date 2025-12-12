@@ -50,6 +50,7 @@ import { FeatureConfigService } from 'src/app/shared/feature-config.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ItemDataService } from 'src/app/core/data/item-data.service';
 import { DSONameService } from 'src/app/core/breadcrumbs/dso-name.service';
+import { FeatureID } from 'src/app/core/data/feature-authorization/feature-id';
 
 am4core.useTheme(am4themes_animated);
 
@@ -116,6 +117,7 @@ export class ItemComponent implements OnInit {
 
   myrating: any;
   isAuthorized$: Observable<boolean> = of(false);
+  isAdmin$: Observable<boolean> = of(false);
   bookmarkitem: any;
   avgrating: number = 0;
   dateType: number = 0;
@@ -203,6 +205,7 @@ export class ItemComponent implements OnInit {
     this.citationselection = "RefMan";
     // this.isAuthorized$ = this.authorizationService.isAuthorized(FeatureID.CanEditItem, this.object.self);
     this.isAuthorized$ = this.authService.isAuthenticated();
+    this.isAdmin$ = this.authorizationService.isAuthorized(FeatureID.AdministratorOf);
     this.itemPageRoute = getItemPageRoute(this.object);
     this.findBookMark();
     if(this.allowCommenting) this.getCommentList();

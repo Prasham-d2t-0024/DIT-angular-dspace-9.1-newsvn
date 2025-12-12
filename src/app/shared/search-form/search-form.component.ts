@@ -125,8 +125,11 @@ export class SearchFormComponent implements OnChanges,OnInit {
   currentPageSubscription: Subscription;
   @Input() contenttype: any;
   selectedTeam: string = "123";
+  selectedMetadata: any = '';
+  selectedMetadataValue: any = '';
   collectionList: any = [];
   suggestionList: any = [];
+  metadataFields: any = [];
   communitiesRD$: BehaviorSubject<PaginatedList<Community>> = new BehaviorSubject<PaginatedList<Community>>({} as any);
   linksToFollow: FollowLinkConfig<Community>[] = [];
   constructor(
@@ -149,6 +152,7 @@ export class SearchFormComponent implements OnChanges,OnInit {
   }
   
   ngOnInit(): void {
+    this.setMetadataFields();
     this.initPage();
   }
 
@@ -188,6 +192,9 @@ export class SearchFormComponent implements OnChanges,OnInit {
   onSubmit(data: any) {
     if (isNotEmpty(this.scope)) {
       data = Object.assign(data, { scope: this.scope });
+    }
+    if (this.selectedMetadata != '' && this.query != '') {
+      data[`f.${this.selectedMetadata}`] = this.query + ",contains";
     }
     this.updateSearch(data);
     this.submitSearch.emit(data);
@@ -262,5 +269,29 @@ export class SearchFormComponent implements OnChanges,OnInit {
 
   onSelectedScope(value: string): void {
     this.scope = value;
+  }
+
+  setMetadataFields(){
+    this.metadataFields = [
+      { id:1, label: "Author", metadata: "dc.author", filterKey: "author" },
+      { id:2, label: "Title", metadata: "dc.title", filterKey: "title" },
+      { id:3, label: "Endorsed", metadata: "obps.endorsementExternal.externalEndorsedBy", filterKey: "externalEndorsedBy" },
+      { id:4, label: "Language", metadata: "dc.language.iso", filterKey: "language" },
+      { id:5, label: "EOV", metadata: "dc.description.eov", filterKey: "eov" },
+      { id:6, label: "SDG", metadata: "dc.description.sdg", filterKey: "sdg" },
+      { id:7, label: "Journal Title", metadata: "dc.bibliographicCitation.title", filterKey: "bibliographicCitationTitle" },
+      { id:8, label: "Issuing Agency", metadata: "dc.publisher", filterKey: "publisher" },
+      { id:9, label: "DOI", metadata: "dc.identifier.doi", filterKey: "doi" },
+      { id:10, label: "EBV", metadata: "dc.description.ebv", filterKey: "ebv" },
+      { id:11, label: "ECV", metadata: "dc.description.ecv", filterKey: "ecv" },
+      { id:12, label: "Adoption Level", metadata: "dc.description.adoption", filterKey: "adoption" },
+      { id:13, label: "Spatial Coverage", metadata: "dc.coverage.spatial", filterKey: "spatial" },
+      { id:14, label: "Maturity Level", metadata: "dc.description.maturitylevel", filterKey: "maturitylevel" }
+    ]
+  }
+
+  onMetadataSelected(value){
+    this.selectedMetadataValue = value;
+    this.selectedMetadata = this.metadataFields.find(field => field.label === value)?.filterKey || '';
   }
 }

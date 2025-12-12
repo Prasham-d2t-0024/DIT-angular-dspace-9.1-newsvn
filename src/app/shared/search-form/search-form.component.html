@@ -1,9 +1,6 @@
 <form #form="ngForm" (ngSubmit)="onSubmit(form.value)" action="/search">
   <div class="repository-searchBox p-0">
     <div class="row form-group input-group justify-content-center">
-      <input type="text" [(ngModel)]="query" name="query"
-        class="col-12 col-sm-5 col-md-7 mb-2 mb-sm-0 border-end-0 input-child" [attr.aria-label]="searchPlaceholder"
-        [attr.data-test]="'search-box' | dsBrowserOnly" [placeholder]="searchPlaceholder" tabindex="0">
 
       @if (showScopeSelector) {
       <select #scopecommunity (change)="onSelectedScope(scopecommunity.value)"
@@ -19,7 +16,24 @@
       </select>
       }
 
-      @if (contenttype != null) {
+      @if (metadataFields.length) {
+        <select #metadata (change)="onMetadataSelected(metadata.value)"
+          class="col-12 col-sm-3 col-md-2 bg-white mb-2 mb-sm-0 dropdown input-child form-select"
+          name="metadataFields" id="metadatafields">
+          <option value="123" selected>{{'search.form.metadata.all' | translate}}</option>
+          @for(field of metadataFields; track field.id) {
+          <ng-container>
+            <option [value]="field.label">{{field.label}}</option>
+          </ng-container>
+          }
+        </select>
+      }
+
+      <input type="text" [(ngModel)]="query" name="query"
+      class="col-12 col-sm-5 col-md-7 mb-2 mb-sm-0 border-end-0 input-child" [attr.aria-label]="searchPlaceholder"
+      [attr.data-test]="'search-box' | dsBrowserOnly" [placeholder]="searchPlaceholder" tabindex="0">
+
+      <!-- @if (contenttype != null) {
       <select #teams (change)="onSelected(teams.value)"
         class="col-12 col-sm-3 col-md-2 border-end-0 bg-white mb-2 mb-sm-0 dropdown input-child form-select"
         name="contentType" id="contenttype">
@@ -30,7 +44,7 @@
         </ng-container>
         }
       </select>
-      }
+      } -->
       <button type="submit" class="col-12 col-sm-1 mb-sm-0 input-child 
                     d-flex align-items-center justify-content-center border-0 search-button btn btn-{{brandColor}}"
         [attr.data-test]="'search-button' | dsBrowserOnly" role="button" tabindex="0"><i

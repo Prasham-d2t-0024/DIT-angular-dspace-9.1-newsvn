@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -36,7 +36,8 @@ import { ThemedSearchSettingsComponent } from 'src/app/shared/search/search-sett
     SearchResultsSkeletonComponent,
     TranslateModule,
     ViewModeSwitchComponent,
-    ThemedSearchSettingsComponent
+    ThemedSearchSettingsComponent,
+    JsonPipe
   ],
 })
 export class SearchResultsComponent extends BaseComponent {

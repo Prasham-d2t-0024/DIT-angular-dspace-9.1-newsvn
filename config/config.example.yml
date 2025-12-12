@@ -508,9 +508,23 @@ comcolSelectionSort:
 search:
   # Settings to enable/disable or configure advanced search filters.
   advancedFilters:
-    enabled: false
+    enabled: true
     # List of filters to enable in "Advanced Search" dropdown
-    filter: [ 'title', 'author', 'subject', 'entityType' ]
+    filter: [ 
+        "title",
+        "author",
+        "externalEndorsedBy",
+        "language",
+        "publisher",
+        "eov",
+        "sdg",
+        "bibliographicCitationTitle",
+        "doi",
+        "ebv",
+        "ecv",
+        "adoption",
+        "spatial",
+        "maturitylevel" ]
   #
   # Number used to render n UI elements called loading skeletons that act as placeholders.
   # These elements indicate that some content will be loaded in their stead.

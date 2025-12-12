@@ -68,18 +68,17 @@
             {{ 'untypeitem.metadata.authors' | translate }} :
           </span>
           @for (author of object.allMetadataValues('dc.contributor.author'); track author; let last = $last) {
-          @if (author.split('[').length == 2) {
-          <a [href]="getasfalink(author)" target="_blank">
-            {{ author.split("[")[0] }} <img src="assets/images/orcid.png">
-          </a>
-          }
-          @else {
-          <a [routerLink]="['/search']" [queryParams]="{ 'f.author': author + ',equals' }">
-            {{ author }}
-          </a>
-          }
-          @if (!last) { <span> | </span> }
-          }
+            @if (author.split('[').length == 2) {
+              <a [href]="getasfalink(author)" target="_blank">
+                {{ author.split("[")[0] }} <img src="assets/images/orcid.png">
+              </a>
+            }@else {
+              <a [routerLink]="['/search']" [queryParams]="{ 'f.author': author + ',equals' }">
+                {{ author }}
+              </a>
+              }
+              @if (!last) { <span> | </span> }
+            }
           }
         </div>
         <div class="col-lg-12 mb-2 p-0">
@@ -566,14 +565,13 @@
               <span *ngIf="!last"> | </span>
             </ng-container>
           </div>
-          <div class="col-lg-12 mb-2 p-0 item-list-abstract" *ngIf="object.firstMetadataValue('dc.rights')">
+          <!-- <div class="col-lg-12 mb-2 p-0 item-list-abstract" *ngIf="object.firstMetadataValue('dc.rights')">
             <span class="text-secondary h6">{{'untypeitem.metadata.creativecommons' | translate}}: </span>
-            <!-- <span class="text-black">{{object.firstMetadataValue('dc.rights')}}</span> -->
             <ng-container *ngFor="let rights of object.allMetadataValues('dc.rights'); let last = last;">
               <span>{{rights}}</span>
               <span *ngIf="!last"> | </span>
             </ng-container>
-          </div>
+          </div> -->
 
 
           <div class="col-lg-12 mb-2 p-0 item-list-abstract"
@@ -856,33 +854,39 @@
               <span *ngIf="!last"> | </span>
             </ng-container>
           </div>
-          <div class="col-lg-12 mb-2 p-0 item-list-abstract"
-            *ngIf="object.firstMetadataValue('obps.contact.contactname')">
-            <span class="text-secondary h6">{{'untypeitem.metadata.contactname' | translate}}: </span>
-            <ng-container *ngFor="let name of object.allMetadataValues('obps.contact.contactname'); let last = last;">
-              <!-- <a [href]="name" target="_blank">{{name}}</a> -->
-              <span>{{name}}</span>
-              <span *ngIf="!last"> | </span>
-            </ng-container>
-          </div>
-          <div class="col-lg-12 mb-2 p-0 item-list-abstract"
-            *ngIf="object.firstMetadataValue('obps.contact.contactemail')">
-            <span class="text-secondary h6">{{'untypeitem.metadata.contactemail' | translate}}: </span>
-            <ng-container *ngFor="let email of object.allMetadataValues('obps.contact.contactemail'); let last = last;">
-              <!-- <a [href]="email" target="_blank">{{email}}</a> -->
-              <span>{{email}}</span>
-              <span *ngIf="!last"> | </span>
-            </ng-container>
-          </div>
-          <div class="col-lg-12 mb-2 p-0 item-list-abstract"
-            *ngIf="object.firstMetadataValue('obps.contact.contactorcid')">
-            <span class="text-secondary h6">{{'untypeitem.metadata.contactorcid' | translate}}: </span>
-            <ng-container *ngFor="let orcid of object.allMetadataValues('obps.contact.contactorcid'); let last = last;">
-              <!-- <a [href]="orcid" target="_blank">{{orcid}}</a> -->
-              <span>{{orcid}}</span>
-              <span *ngIf="!last"> | </span>
-            </ng-container>
-          </div>
+          @if((isAuthorized$ | async) && (isAdmin$ | async)){
+            <div class="col-lg-12 mb-2 p-0 item-list-abstract"
+              *ngIf="object.firstMetadataValue('obps.contact.contactname')">
+              <span class="text-secondary h6">{{'untypeitem.metadata.contactname' | translate}}: </span>
+              <ng-container *ngFor="let name of object.allMetadataValues('obps.contact.contactname'); let last = last;">
+                <!-- <a [href]="name" target="_blank">{{name}}</a> -->
+                <span>{{name}}</span>
+                <span *ngIf="!last"> | </span>
+              </ng-container>
+            </div>
+          }
+          @if((isAuthorized$ | async) && (isAdmin$ | async)){
+            <div class="col-lg-12 mb-2 p-0 item-list-abstract"
+              *ngIf="object.firstMetadataValue('obps.contact.contactemail')">
+              <span class="text-secondary h6">{{'untypeitem.metadata.contactemail' | translate}}: </span>
+              <ng-container *ngFor="let email of object.allMetadataValues('obps.contact.contactemail'); let last = last;">
+                <!-- <a [href]="email" target="_blank">{{email}}</a> -->
+                <span>{{email}}</span>
+                <span *ngIf="!last"> | </span>
+              </ng-container>
+            </div>
+          }
+          @if((isAuthorized$ | async) && (isAdmin$ | async)){
+            <div class="col-lg-12 mb-2 p-0 item-list-abstract"
+              *ngIf="object.firstMetadataValue('obps.contact.contactorcid')">
+              <span class="text-secondary h6">{{'untypeitem.metadata.contactorcid' | translate}}: </span>
+              <ng-container *ngFor="let orcid of object.allMetadataValues('obps.contact.contactorcid'); let last = last;">
+                <!-- <a [href]="orcid" target="_blank">{{orcid}}</a> -->
+                <span>{{orcid}}</span>
+                <span *ngIf="!last"> | </span>
+              </ng-container>
+            </div>
+          }  
 
 
           <div class="col-lg-12 mb-2 p-0 item-list-abstract"

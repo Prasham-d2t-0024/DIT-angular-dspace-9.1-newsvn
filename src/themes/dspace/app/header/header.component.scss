@@ -34,7 +34,9 @@
     line-height: inherit;
     white-space: nowrap;
     height: 80px;
-    transform: scale(0.65);
+    transform: scale(0.75);
+    position: relative;
+    bottom: 5px;
   }
   
   .navbar-brand{

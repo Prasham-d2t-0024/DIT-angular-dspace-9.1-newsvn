@@ -7,6 +7,7 @@ import { SEARCH_CONFIG_SERVICE } from '../../../../../../app/my-dspace-page/my-d
 import { PageSizeSelectorComponent } from '../../../../../../app/shared/page-size-selector/page-size-selector.component';
 import { SearchSettingsComponent as BaseComponent } from '../../../../../../app/shared/search/search-settings/search-settings.component';
 import { SidebarDropdownComponent } from '../../../../../../app/shared/sidebar/sidebar-dropdown.component';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'ds-themed-search-settings',
@@ -26,6 +27,7 @@ import { SidebarDropdownComponent } from '../../../../../../app/shared/sidebar/s
     PageSizeSelectorComponent,
     SidebarDropdownComponent,
     TranslateModule,
+    JsonPipe
   ],
 })
 export class SearchSettingsComponent extends BaseComponent {
