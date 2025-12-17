@@ -7467,4 +7467,46 @@
   "search.form.scope.all-items": "All Fields",
   "search.form.metadata.all":"All Fields",
 
+  "search.filters.applied.f.maturitylevel":"Maturity Level",
+  "search.filters.filter.maturitylevel.head":"Maturity Level",
+  "search.filters.filter.maturitylevel.placeholder":"Maturity Level",
+
+  "search.filters.applied.f.bibliographicCitationTitle":"Journal Title",
+  "search.filters.filter.bibliographicCitationTitle.head":"Journal Title",
+  "search.filters.filter.bibliographicCitationTitle.placeholder":"Journal Title",
+
+  "search.filters.applied.f.externalEndorsedBy":"Endorsed",
+  "search.filters.filter.externalEndorsedBy.head":"Endorsed",
+  "search.filters.filter.externalEndorsedBy.placeholder":"Endorsed",
+
+  "search.filters.applied.f.language":"Language",
+  "search.filters.filter.language.head":"Language",
+  "search.filters.filter.language.placeholder":"Language",
+
+  "search.filters.applied.f.eov":"EOV",
+  "search.filters.filter.eov.head":"EOV",
+  "search.filters.filter.eov.placeholder":"EOV",
+
+  "search.filters.applied.f.sdg":"SDG",
+  "search.filters.filter.sdg.head":"SDG",
+  "search.filters.filter.sdg.placeholder":"SDG",
+
+  "search.filters.applied.f.publisher":"Issuing Agency",
+  "search.filters.filter.publisher.head":"Issuing Agency",
+  "search.filters.filter.publisher.placeholder":"Issuing Agency",
+  "search.filters.applied.f.doi":"DOI",
+  "search.filters.filter.doi.head":"DOI",
+  "search.filters.filter.doi.placeholder":"DOI",
+  "search.filters.applied.f.ebv":"EBV",
+  "search.filters.filter.ebv.head":"EBV",
+  "search.filters.filter.ebv.placeholder":"EBV",
+  "search.filters.applied.f.ecv":"ECV",
+  "search.filters.applied.f.adoption":"Adoption Level",
+  "search.filters.applied.f.spatial":"Spatial Coverage",
+  "search.filters.filter.spatial.head":"Spatial Coverage",
+  "search.filters.filter.spatial.placeholder":"Spatial Coverage",
+  "search.filters.filter.adoption.head":"Adoption Level",
+  "search.filters.filter.adoption.placeholder":"Adoption Level",
+  "search.filters.filter.ecv.head":"ECV",
+  "search.filters.filter.ecv.placeholder":"ECV",
 }

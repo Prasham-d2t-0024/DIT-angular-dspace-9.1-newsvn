@@ -524,8 +524,21 @@ export class DefaultAppConfig implements AppConfig {
 
   search: SearchConfig = {
     advancedFilters: {
-      enabled: false,
-      filter: ['title', 'author', 'subject', 'entityType'],
+      enabled: true,
+      filter: [ "title",
+        "author",
+        "externalEndorsedBy",
+        "language",
+        "publisher",
+        "eov",
+        "sdg",
+        "bibliographicCitationTitle",
+        "doi",
+        "ebv",
+        "ecv",
+        "adoption",
+        "spatial",
+        "maturitylevel"],
     },
     filterPlaceholdersCount: 5,
   };
