@@ -2,15 +2,19 @@ import {
   CdkTreeModule,
   FlatTreeControl,
 } from '@angular/cdk/tree';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
+  ElementRef,
   OnDestroy,
   OnInit,
+  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { take } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, take } from 'rxjs/operators';
 
 import { DSONameService } from '../../core/breadcrumbs/dso-name.service';
 import {
@@ -25,6 +29,7 @@ import { TruncatablePartComponent } from '../../shared/truncatable/truncatable-p
 import { CommunityListDatasource } from '../community-list-datasource';
 import { CommunityListService } from '../community-list-service';
 import { FlatNode } from '../flat-node.model';
+import { RequestParam } from 'src/app/core/cache/models/request-param.model';
 
 /**
  * A tree-structured list of nodes representing the communities, their subCommunities and collections.
@@ -46,6 +51,7 @@ import { FlatNode } from '../flat-node.model';
     TranslateModule,
     TruncatableComponent,
     TruncatablePartComponent,
+    JsonPipe
   ],
 })
 export class CommunityListComponent implements OnInit, OnDestroy {
@@ -57,14 +63,16 @@ export class CommunityListComponent implements OnInit, OnDestroy {
     (node: FlatNode) => node.level, (node: FlatNode) => true,
   );
   dataSource: CommunityListDatasource;
-  paginationConfig: FindListOptions;
+  paginationConfig: any;
   trackBy = (index, node: FlatNode) => node.id;
-
+  @ViewChild('communitySearch') communitySearch: ElementRef;
+  
   constructor(
     protected communityListService: CommunityListService,
     public dsoNameService: DSONameService,
+    private cdref: ChangeDetectorRef,
   ) {
-    this.paginationConfig = new FindListOptions();
+    this.paginationConfig = {};
     this.paginationConfig.elementsPerPage = 2;
     this.paginationConfig.currentPage = 1;
     this.paginationConfig.sort = new SortOptions('dc.title', SortDirection.ASC);
@@ -79,6 +87,12 @@ export class CommunityListComponent implements OnInit, OnDestroy {
       this.expandedNodes = [...result];
       this.dataSource.loadCommunities(this.paginationConfig, this.expandedNodes);
     });
+  }
+  searchInCommunities(query: string) {
+    this.dataSource = new CommunityListDatasource(this.communityListService);
+    this.paginationConfig.searchParams = [new RequestParam('query', query)];
+    this.dataSource.loadSearchedCommunities(this.paginationConfig, this.expandedNodes, query);
+    this.cdref.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -124,7 +138,11 @@ export class CommunityListComponent implements OnInit, OnDestroy {
         node.currentCommunityPage = 1;
       }
     }
-    this.dataSource.loadCommunities(this.paginationConfig, this.expandedNodes);
+    if(this.communitySearch?.nativeElement.value.trim()?.length){
+      this.dataSource.loadSearchedCommunities(this.paginationConfig, this.expandedNodes, this.communitySearch?.nativeElement.value.trim());
+    }else{
+      this.dataSource.loadCommunities(this.paginationConfig, this.expandedNodes);
+    }
   }
 
   /**
@@ -150,7 +168,11 @@ export class CommunityListComponent implements OnInit, OnDestroy {
     } else {
       this.paginationConfig.currentPage++;
     }
-    this.dataSource.loadCommunities(this.paginationConfig, this.expandedNodes);
+    if(this.communitySearch?.nativeElement.value.trim()?.length){
+      this.dataSource.loadSearchedCommunities(this.paginationConfig, this.expandedNodes, this.communitySearch?.nativeElement.value.trim());
+    }else{
+      this.dataSource.loadCommunities(this.paginationConfig, this.expandedNodes);
+    }
   }
 
 }

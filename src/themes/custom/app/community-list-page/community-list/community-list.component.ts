@@ -1,5 +1,5 @@
 import { CdkTreeModule } from '@angular/cdk/tree';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -23,6 +23,7 @@ import { TruncatablePartComponent } from '../../../../../app/shared/truncatable/
     TranslateModule,
     TruncatableComponent,
     TruncatablePartComponent,
+    JsonPipe
   ],
 })
 export class CommunityListComponent extends BaseComponent {

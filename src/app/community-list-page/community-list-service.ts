@@ -50,6 +50,7 @@ import { CommunityListSaveAction } from './community-list.actions';
 import { CommunityListState } from './community-list.reducer';
 import { FlatNode } from './flat-node.model';
 import { ShowMoreFlatNode } from './show-more-flat-node.model';
+import { HttpClient } from '@angular/common/http';
 
 // Helper method to combine and flatten an array of observables of flatNode arrays
 export const combineAndFlatten = (obsList: Observable<FlatNode[]>[]): Observable<FlatNode[]> =>
@@ -115,14 +116,17 @@ const loadingNodeSelector = createSelector(communityListStateSelector, (communit
 export class CommunityListService {
 
   private pageSize: number;
+  private baseUrl: string;
 
   constructor(
     @Inject(APP_CONFIG) protected appConfig: AppConfig,
     private communityDataService: CommunityDataService,
     private collectionDataService: CollectionDataService,
     private store: Store<any>,
+    private http: HttpClient,
   ) {
     this.pageSize = appConfig.communityList.pageSize;
+    this.baseUrl = this.appConfig.rest.baseUrl;
   }
 
   private configOnePage: FindListOptions = Object.assign(new FindListOptions(), {
@@ -153,6 +157,35 @@ export class CommunityListService {
     for (let i = 1; i <= currentPage; i++) {
       const pagination: FindListOptions = Object.assign({}, findOptions, { currentPage: i });
       topCommunities.push(this.getTopCommunities(pagination));
+    }
+    const topComs$ = observableCombineLatest([...topCommunities]).pipe(
+      map((coms: PaginatedList<Community>[]) => {
+        const newPages: Community[][] = coms.map((unit: PaginatedList<Community>) => unit.page);
+        const newPage: Community[] = [].concat(...newPages);
+        let newPageInfo = new PageInfo();
+        if (coms && coms.length > 0) {
+          newPageInfo = Object.assign({}, coms[0].pageInfo, { currentPage });
+        }
+        return buildPaginatedList(newPageInfo, newPage);
+      }),
+    );
+    return topComs$.pipe(
+      switchMap((topComs: PaginatedList<Community>) => this.transformListOfCommunities(topComs, 0, null, expandedNodes)),
+      // distinctUntilChanged((a: FlatNode[], b: FlatNode[]) => a.length === b.length)
+    );
+  }
+
+  /**
+   * Gets all top communities, limited by page, and transforms this in a list of flatNodes.
+   * @param findOptions       FindListOptions
+   * @param expandedNodes     List of expanded nodes; if a node is not expanded its subCommunities and collections need
+   *                            not be added to the list
+   */
+  loadSearchedCommunities(findOptions: any, expandedNodes: FlatNode[], query:string): Observable<FlatNode[]> {
+    const currentPage = findOptions.currentPage;
+    const topCommunities = [];
+    for (let i = 1; i <= currentPage; i++) {
+      topCommunities.push(this.processCommunitySearch(findOptions, query));
     }
     const topComs$ = observableCombineLatest([...topCommunities]).pipe(
       map((coms: PaginatedList<Community>[]) => {
@@ -331,6 +364,42 @@ export class CommunityListService {
     return observableCombineLatest(hasSubcoms$, hasColls$).pipe(
       map(([hasSubcoms, hasColls]: [boolean, boolean]) => hasSubcoms || hasColls),
     );
+  }
+
+  processCommunitySearch(options: any, query: string): Observable<PaginatedList<Community>> {
+    return this.communityDataService.searchTop({
+      // query: options.searchParams?.query || query,
+      currentPage: options.currentPage,
+      elementsPerPage: this.pageSize,
+      sort: {
+        field: options.sort.field,
+        direction: options.sort.direction,
+      },
+      searchParams:options.searchParams
+    },
+    query,
+    followLink('subcommunities', { findListOptions: this.configOnePage }),
+    followLink('collections', { findListOptions: this.configOnePage }),
+    )
+      .pipe(
+        getFirstSucceededRemoteData(),
+        map((results) => results.payload),
+      );
+    // const params = new URLSearchParams({
+    //   query: query,
+    //   sort: 'dc.title,ASC',
+    //   'embed.size': 'subcommunities=1',
+    //   embed: 'subcommunities',
+    // });
+    // params.append('embed.size', 'collections=1');
+    // params.append('embed', 'collections');
+    
+    // let fullUrl = `${this.baseUrl}/api/core/communities/search/searchTopCommunity?${params.toString()}`;
+    // return this.http.get(fullUrl).pipe(
+    //   map((response: any) => {
+    //     return response;
+    //   }),
+    // );
   }
 
 }

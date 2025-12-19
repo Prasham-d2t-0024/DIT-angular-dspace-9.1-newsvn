@@ -44,6 +44,18 @@ export class CommunityListDatasource implements DataSource<FlatNode> {
       this.communityList$.next(flatNodes);
     });
   }
+  
+  loadSearchedCommunities(findOptions: FindListOptions, expandedNodes: FlatNode[], query: string) {
+    this.loading$.next(true);
+    if (hasValue(this.subLoadCommunities)) {
+      this.subLoadCommunities.unsubscribe();
+    }
+    this.subLoadCommunities = this.communityListService.loadSearchedCommunities(findOptions, expandedNodes, query).pipe(
+      finalize(() => this.loading$.next(false)),
+    ).subscribe((flatNodes: FlatNode[]) => {
+      this.communityList$.next(flatNodes);
+    });
+  }
 
   disconnect(collectionViewer: CollectionViewer): void {
     this.communityList$.complete();

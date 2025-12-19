@@ -1,6 +1,28 @@
+<div class="row mb-3">
+  <div class="col-12 col-md-6">
+    <div class="input-group">
+      <input #communitySearch 
+        type="text" 
+        class="form-control" 
+        placeholder="{{'communityList.search.placeholder' | translate}}"
+        [attr.aria-label]="'communityList.search.placeholder' | translate"
+        (keyup.enter)="searchInCommunities(communitySearch.value)">
+      <button class="btn btn-primary" 
+        type="button" 
+        (click)="searchInCommunities(communitySearch.value)"
+        [attr.aria-label]="'communityList.search.button' | translate"
+        role="button"
+        tabindex="0">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
 @if ((dataSource.loading$ | async) && !loadingNode) {
   <ds-loading class="ds-themed-loading"></ds-loading>
 }
+
 <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl" [trackBy]="trackBy">
   <!-- This is the tree node template for show more node -->
   <cdk-tree-node *cdkTreeNodeDef="let node; when: isShowMore" cdkTreeNodePadding
@@ -32,7 +54,7 @@
     <div class="btn-group">
       @if (hasChild(null, node) | async) {
         <button type="button" class="btn btn-default btn-transparent" cdkTreeNodeToggle
-          [attr.aria-label]="(node.isExpanded ? 'communityList.collapse' : 'communityList.expand') | translate:{ name: dsoNameService.getName(node.payload) }"
+          [attr.aria-label]="(node.isExpanded ? 'communityList.collapse' : 'communityList.expand') | translate:{ name: node?.payload ? dsoNameService.getName(node.payload) : node?.name }"
           (click)="toggleExpanded(node)"
           (keyup.enter)="toggleExpanded(node)"
           (keyup.space)="toggleExpanded(node)"
@@ -41,7 +63,7 @@
           tabindex="0">
           <span class="{{node.isExpanded ? 'fa fa-chevron-down' : 'fa fa-chevron-right'}}"
           aria-hidden="true"></span>
-          <span class="sr-only">{{ (node.isExpanded ? 'communityList.collapse' : 'communityList.expand') | translate:{ name: dsoNameService.getName(node.payload) } }}</span>
+          <span class="sr-only">{{ (node.isExpanded ? 'communityList.collapse' : 'communityList.expand') | translate:{ name: node?.payload ? dsoNameService.getName(node.payload) : node?.name } }}</span>
         </button>
       }
       <!--Don't render the button when non-expandable otherwise it's still accessible, instead render this placeholder-->
@@ -52,23 +74,24 @@
       }
       <div class="d-flex flex-row">
         <span class="d-flex align-middle my-auto">
-          <a [routerLink]="node.route" class="lead" role="link" tabindex="0">{{ dsoNameService.getName(node.payload) }}</a>
+          
+          <a [routerLink]="node.route" class="lead" role="link" tabindex="0">{{ node?.payload ? dsoNameService.getName(node.payload) : node?.name }}</a>
           <span class="pe-2">&nbsp;</span>
-          @if (node.payload.archivedItemsCount >= 0) {
-            <span class="badge rounded-pill bg-secondary align-top archived-items-lead my-auto ps-2 pe-2">{{node.payload.archivedItemsCount}}</span>
+          @if (node?.payload?.archivedItemsCount >= 0 || node?.archivedItemsCount >= 0) {
+            <span class="badge rounded-pill bg-secondary align-top archived-items-lead my-auto ps-2 pe-2">{{node?.payload?.archivedItemsCount ?? node?.archivedItemsCount}}</span>
           }
         </span>
       </div>
     </div>
     <ds-truncatable [id]="node.id">
       <div class="text-muted" cdkTreeNodePadding>
-        @if (node.payload.shortDescription) {
+        @if (node?.payload?.shortDescription ?? node.shortDescription) {
           <div class="d-flex">
             <span aria-hidden="true" class="btn btn-default invisible">
               <span class="fa fa-chevron-right"></span>
             </span>
             <ds-truncatable-part [id]="node.id" [minLines]="3">
-              <span>{{node.payload.shortDescription}}</span>
+              <span>{{node?.payload?.shortDescription ?? node.shortDescription}}</span>
             </ds-truncatable-part>
           </div>
         }
@@ -92,18 +115,18 @@
         <span class="fa fa-chevron-right"></span>
       </span>
       <h6 class="align-middle my-auto">
-        <a [routerLink]="node.route" class="lead" role="link" tabindex="0">{{ dsoNameService.getName(node.payload) }}</a>
+        <a [routerLink]="node.route" class="lead" role="link" tabindex="0">{{ node?.payload ? dsoNameService.getName(node.payload) : node?.name }}</a>
       </h6>
     </div>
     <ds-truncatable [id]="node.id">
       <div class="text-muted" cdkTreeNodePadding>
-        @if (node.payload.shortDescription) {
+        @if (node?.payload?.shortDescription ?? node.shortDescription) {
           <div class="d-flex">
             <span aria-hidden="true" class="btn btn-default invisible">
               <span class="fa fa-chevron-right"></span>
             </span>
             <ds-truncatable-part [id]="node.id" [minLines]="3">
-              <span>{{node.payload.shortDescription}}</span>
+              <span>{{node?.payload?.shortDescription ?? node.shortDescription}}</span>
             </ds-truncatable-part>
           </div>
         }
