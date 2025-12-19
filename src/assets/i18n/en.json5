@@ -7285,7 +7285,7 @@
   "community.trending.items": "Trending Items",
   "community.trending.metrics": "Trending Metrics",
   "home.label.commentcount": "Comment Count",
-  "home.label.homepagecarousel":"The Ocean Best Practices System (OBPS) is a secure, permanent, global repository of ocean research, operations, data and information management and applications methodologies (often referred to as ‘best practices’). These are methods that the providers have found valuable, however not all of them have been shown to be ‘better’ than other similar methods. Unless it has been accepted and annotated in OBPS as an Endorsed Practice inclusion of a methodology in the OBPS, does not indicate that the methodology is recommended by OBPS. Endorsed methods are those that a specific organisation declares are the recommended or 'the best' for that purpose and community. Endorsement is governed by the endorsing organisation with the OBPS.",
+  "home.label.homepagecarousel":"The Ocean Best Practices System (OBPS) is a secure, permanent, global repository of ocean research, operations, data and information management and applications methodologies (often referred to as ‘best practices’). These are methods that the providers have found valuable, however not all of them have been shown to be ‘better’ than other similar methods. Inclusion of a methodology in the OBPS, does not indicate that the methodology is recommended by OBPS.",
   "home.label.commentcount": "Comment Count",
   "untypeitem.metadata.commentstitle": "Comments",
   "untypeitem.metadata.subtitle": "(Leave your Comments here about this item.)",
