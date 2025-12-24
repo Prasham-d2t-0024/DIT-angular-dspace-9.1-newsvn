@@ -132,20 +132,33 @@ export class DisplayBitstreamComponent implements OnInit, AfterViewInit {
   }
   public callme(): void {
     this.route.data.subscribe((data: Data) => {
-      fetch(this.bistremobj?._links?.content?.href + '&isDownload=true')
-        .then(res => res.blob())   // get response as a Blob
-        .then(blob => {
-          console.log('PDF Blob:', blob);
-        })
-        .catch(err => console.error('Fetch error:', err));
-      // this.bistremobj = data.bitstream.payload;
-      // this.pdfViewer.pdfSrc = this.bistremobj._links.content.href + '?isDownload=true'; // pdfSrc can be Blob or Uint8Array
-      //   this.pdfViewer.refresh(); 
-      // this.cdRef.detectChanges();
-       this.bistremobj = data.bitstream.payload;
-       this.getBistreamPAth(this.bistremobj);
+      this.bistremobj = data.bitstream.payload;
+      this.updateDownloadCount(this.bistremobj);
+      this.getBistreamPAth(this.bistremobj);
+    })
+  }
 
-    });
+  updateDownloadCount(bistream) {
+    if (bistream !== null) {
+      this.bitstreamDataService.findById(bistream.id).pipe(getFirstSucceededRemoteData(),
+        getRemoteDataPayload(),
+      ).subscribe((response: Bitstream) => {
+        this.auth.getShortlivedToken().pipe(take(1), map((token) =>
+          hasValue(token) ? new URLCombiner(response._links.content.href,`?authentication-token=${token}&isDownload=true`).toString() : response._links.content.href)).subscribe((logs: string) => {
+            const token: AuthTokenInfo = this.auth.getToken();
+           let authorization = this.auth.buildAuthHeader(token);
+            this.cdRef.detectChanges();
+            fetch(logs)
+              .then(response => {
+                console.log("Download count updated");
+              })
+              .catch(error => {
+                console.error("Error updating download count:", error);
+              });
+            this.cdRef.detectChanges();
+          });
+      })
+    }
   }
 
   getBistreamPAth(bistremobj: Bitstream) {
