@@ -51,6 +51,7 @@ import { SEARCH_CONFIG_SERVICE } from '../my-dspace-page/my-dspace-configuration
 import { SearchFormComponent } from '../shared/search-form/search-form.component';
 import { AppImageConfigService } from '../shared/app-image-config.service';
 import { SidebarService } from '../shared/sidebar/sidebar.service';
+import { ItemDataService } from '../core/data/item-data.service';
 @Component({
   selector: 'ds-base-home-page',
   styleUrls: ['./home-page.component.scss'],
@@ -119,6 +120,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   homepageImagePath: string;
   homePageImageHeight: string;
   homePageLayoutConfig: any;
+  totalItemsCount?: number;
 
   constructor(
     private searchService: SearchService,
@@ -135,6 +137,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     public searchConfigurationService: SearchConfigurationService,
     private imageConfig: AppImageConfigService,
     private sidebarService: SidebarService,
+    private itemDataService: ItemDataService,
   ) {
     this.isXsOrSm$ = this.windowService.isXsOrSm();
     this.recentSubmissionspageSize = this.appConfig.homePage.recentSubmissions.pageSize;
@@ -216,21 +219,36 @@ export class HomePageComponent implements OnInit, AfterViewInit {
       this.filter.pageSize = 100;
       
       this.searchService.getFacetValuesFor(this.filter, 1, null).pipe(getFirstSucceededRemoteData()).subscribe((rd: any) => {
-        let a = rd.payload.page;
-        this.contenttype = rd.payload.page;
-        this.contenttype = [...this.contenttype].sort((a, b) => a.label.localeCompare(b.label));
-        this.isXsOrSm$.pipe(take(1)).subscribe((mobile) => {
-          if (mobile) {
-            for (let i = 0; i < a.length; i += 1) {
-              this.dctype.push(a.slice(i, i + 1));
+        const original = rd.payload.page as any[];
+        const sorted = [...original].sort((a, b) => a.label.localeCompare(b.label));
+
+        this.itemDataService.getTotalItemsCount().pipe(
+          getFirstSucceededRemoteData(),
+          take(1)
+        ).subscribe((rd: any) => {
+          const cnt = Number(rd?.payload?.count) || 0;
+          this.totalItemsCount = cnt;
+          const totalItem: any = {
+            label: 'Total Items',
+            count: cnt,
+          };
+
+          const a = [...sorted, totalItem];
+          this.contenttype = a;
+
+          this.dctype = [];
+          this.isXsOrSm$.pipe(take(1)).subscribe((mobile) => {
+            if (mobile) {
+              for (let i = 0; i < a.length; i += 1) {
+                this.dctype.push(a.slice(i, i + 1));
+              }
+            } else {
+              for (let i = 0; i < a.length; i += 6) {
+                this.dctype.push(a.slice(i, i + 6));
+              }
             }
-          } else {
-            for (let i = 0; i < a.length; i += 6) {
-              this.dctype.push(a.slice(i, i + 6));
-            }
-          }
-          
-        })
+          });
+        });
       })
       
     })
@@ -245,6 +263,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   return renderFilterType(type);
 }
 
+  
   public geticon(filtername) {
     if (filtername.includes('Communication')) {
       return 'fa fa-video-camera img';

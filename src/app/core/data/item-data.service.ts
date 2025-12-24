@@ -489,15 +489,10 @@ export class ItemDataService extends BaseItemDataService {
     hrefObs.pipe(
       take(1)
     ).subscribe((href) => {
-
       href = href + "/downloadCitation?itemid=" + itemid + "&formate=" + selectionType;
       href1 = href;
-
-
     });
-
     return href1;
-
   }
 
   public getexcleEndpoint(): Observable<string> {
@@ -509,5 +504,24 @@ export class ItemDataService extends BaseItemDataService {
     // });
   }
 
+  getTotalItemsCount(): any {
+    let href1 = "";
+    const hrefObs = this.getEndpoint().pipe(
+      isNotEmptyOperator(),
+      take(1)
+    );
+    hrefObs.pipe(
+      take(1)
+    ).subscribe((href) => {
+
+      href = href + "/getTotle";
+      href1 = href;
+      const request = new GetRequest(this.requestService.generateRequestId(), href);
+      this.requestService.send(request);
+
+    });
+
+    return this.rdbService.buildSingle(href1);
+  }
 
 }

@@ -74,6 +74,8 @@ export class Item extends DSpaceObject implements ChildHALResource, HandleObject
   downloadData:any;
   @autoserialize
   viewData:any;
+  @autoserialize
+  count:any;
   /**
    * The Date of the last modification of this Item
    */
