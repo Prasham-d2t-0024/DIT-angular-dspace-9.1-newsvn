@@ -25,7 +25,7 @@
                 @for (file of originals?.page; track file; let i = $index) {
                 <div class="col-12 d-flex" style="justify-content: space-between;">
                   <a style="cursor: pointer;" (click)="getBistreamPAth(file)" target="_blank">
-                    <span class="slash text-black">{{ i + 1 }}. {{ file.firstMetadataValue('dc.description') }}</span>
+                    <span class="slash text-black">{{ i + 1 }}. {{ file.firstMetadataValue('dc.description') ?? dsoNameService.getName(file) }}</span>
                   </a>
                   <a style="cursor: pointer;" (click)="downloadPdf(file)" title="Download File">
                     <i class="fa fa-download text-primary" aria-hidden="true"></i>

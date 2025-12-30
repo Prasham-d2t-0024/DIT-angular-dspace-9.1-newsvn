@@ -130,9 +130,9 @@
           </span>
           @for (lang of object.allMetadataValues('dc.language.iso'); track lang; let last = $last) {
           <a class="h6" [routerLink]="['/search']" [queryParams]="{ 'f.language': lang + ',equals' }">
-            <span class="badge badge-secondary">{{ lang }}</span>
+            <span class="badge badge-secondary me-1">{{ lang }}</span>
           </a>
-          @if (!last) { <span> | </span> }
+          <!-- @if (!last) { <span> | </span> } -->
           }
           }
         </div>
