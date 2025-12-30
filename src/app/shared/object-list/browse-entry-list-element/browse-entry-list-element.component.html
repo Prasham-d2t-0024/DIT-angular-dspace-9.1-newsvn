@@ -1,13 +1,25 @@
 <div class="d-flex flex-row">
   @if (linkType !== linkTypes.None) {
     <a [target]="(linkType === linkTypes.ExternalLink) ? '_blank' : '_self'" [attr.rel]="(linkType === linkTypes.ExternalLink) ? 'noopener noreferrer' : null" [routerLink]="[]" [queryParams]="queryParams$ | async" [queryParamsHandling]="'merge'" class="lead" role="link" tabindex="0">
-      {{object.value}}
+      {{getObjectValue(object.value)}}
     </a>
+    @if(showOrcidIcon){
+      &nbsp;&nbsp;
+      <a [href]="getasfalink(object.value)" target="_blank">
+        <img src="assets/images/orcid.png">
+      </a>
+    }
   }
   @if (linkType === linkTypes.None) {
     <span class="lead">
-      {{object.value}}
+      {{getObjectValue(object.value)}}
     </span>
+    @if(showOrcidIcon){
+      &nbsp;&nbsp;
+      <a [href]="getasfalink(object.value)" target="_blank">
+        <img src="assets/images/orcid.png">
+      </a>
+    }
   }
   <span class="pe-2">&nbsp;</span>
   <span class="badge rounded-pill bg-secondary align-self-center ps-2 pe-2">{{object.count}}</span>

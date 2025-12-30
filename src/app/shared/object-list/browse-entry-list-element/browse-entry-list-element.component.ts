@@ -18,6 +18,7 @@ import { BrowseEntry } from '../../../core/shared/browse-entry.model';
 import { ViewMode } from '../../../core/shared/view-mode.model';
 import { listableObjectComponent } from '../../object-collection/shared/listable-object/listable-object.decorator';
 import { AbstractListableElementComponent } from '../../object-collection/shared/object-collection-element/abstract-listable-element.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'ds-browse-entry-list-element',
@@ -39,11 +40,13 @@ export class BrowseEntryListElementComponent extends AbstractListableElementComp
    * Emits the query parameters for the link of this browse entry list element
    */
   queryParams$: Observable<Params>;
+  showOrcidIcon:boolean = false;
 
   constructor(
     public dsoNameService: DSONameService,
     protected paginationService: PaginationService,
     protected routeService: RouteService,
+    public sanitizer: DomSanitizer,
   ) {
     super(dsoNameService);
   }
@@ -69,4 +72,29 @@ export class BrowseEntryListElementComponent extends AbstractListableElementComp
       }),
     );
   }
+
+  getObjectValue(value){
+    this.showOrcidIcon = false;
+    if(!value.includes('[')) return value;
+
+    this.showOrcidIcon = true;
+    return value.split('[')[0];
+  }
+
+  getasfalink(link: string) {
+    let orcidBaseUrl = "https://orcid.org/";
+    let extractedLink = link;
+
+    if (link.includes("[")) {
+      extractedLink = link.split("[")[1].split("]")[0];
+    }
+
+    // Ensure the ORCID link is correctly formatted
+    if (!extractedLink.startsWith(orcidBaseUrl)) {
+      extractedLink = orcidBaseUrl + extractedLink;
+    }
+
+    return this.sanitizer.bypassSecurityTrustResourceUrl(extractedLink);
+  }
+
 }

@@ -134,4 +134,10 @@ export class SearchFacetOptionComponent implements OnInit {
     const message = this.translateService.instant('search-facet-option.update.announcement', { filter: this.filterValue.value });
     this.liveRegionService.addMessage(message);
   }
+
+  getValue(value){
+    if(!value.includes('[')) return value;
+    return value.split('[')[0].trim();
+  }
+
 }

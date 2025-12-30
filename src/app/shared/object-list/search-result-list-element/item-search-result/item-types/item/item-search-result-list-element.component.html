@@ -247,9 +247,9 @@
                 <span *ngIf="author.split('[').length == 2">
                   <a [routerLink]="['/search']" [queryParams]="{'f.author': author+',equals'}" [innerHTML]="author.split('[')[0]">
                   </a>
-                  <!-- <a [href]="getasfalink(author)" target="_blank">
+                  <a class="ms-1" [href]="getasfalink(author)" target="_blank">
                     <img src="assets/images/orcid.png" alt="ORCID">
-                  </a> -->
+                  </a>
                 </span>
               </span>
               <span *ngIf="!last">; </span>
@@ -265,6 +265,9 @@
                 </a>
                 <span *ngIf="author.split('[').length == 2">
                   <a [routerLink]="['/search']" [queryParams]="{'f.author': author+',equals'}" [innerHTML]="author.split('[')[0]">
+                  </a>
+                  <a class="ms-1" [href]="getasfalink(author)" target="_blank">
+                    <img src="assets/images/orcid.png" alt="ORCID">
                   </a>
                 </span>
               </span>
@@ -285,9 +288,9 @@
                     <span *ngIf="author.split('[').length == 2">
                       <a [routerLink]="['/search']" [queryParams]="{'f.author': author+',equals'}" [innerHTML]="author.split('[')[0]">
                       </a>
-                      <!-- <a [href]="getasfalink(author)" target="_blank">
+                      <a class="ms-1" [href]="getasfalink(author)" target="_blank">
                         <img src="assets/images/orcid.png" alt="ORCID">
-                      </a> -->
+                      </a>
                     </span>
                   </span>
                 </a>
