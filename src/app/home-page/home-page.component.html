@@ -56,11 +56,15 @@
 <div class="wrapper banner-header">
   <div class="backdrop">
     <div class="h-100">
-      <div class="row align-items-top justify-content-center h-100 m-0 mt-2">
-        <div class="row justify-content-center mt-5 mb-3">
+      <div class="row align-items-top justify-content-center h-100 m-0 mt-4">
+        <div class="px-4 d-flex justify-content-center text-justify">
+          <p class="mb-0" [innerHTML]="'home.label.homepagecarousel' | translate"></p>
+        </div>
+        <div class="col-1"></div>
+        <div class="row justify-content-center mt-4 mb-4">
           <div class="col-12 col-md-10">
             <ds-base-search-form [contenttype]="contenttype" modalDialogClass="search-form" centered="true"
-              [showScopeSelector]="true" [inPlaceSearch]="false"
+              [showScopeSelector]="false" [inPlaceSearch]="false"
               [searchPlaceholder]="'home.search-form.placeholder' | translate">
             </ds-base-search-form>
           </div>
@@ -68,10 +72,6 @@
         <!-- <div class="col-12 d-flex justify-content-center mb-2" [ngClass]="(isXsOrSm$ | async) ? '':'heightdesktop'">
           <img [src]="image" class="mr-3 home-page-img" [ngClass]="(isXsOrSm$ | async) ? 'widthphone':''" />
         </div> -->
-        <div class="col-1"></div>
-        <div class="px-4 d-flex justify-content-center text-justify">
-          <p [innerHTML]="'home.label.homepagecarousel' | translate"></p>
-        </div>
         <div class="col-1"></div>
         <div class="col-12 carousel-resource-cards p-0">
           <div class="carousel-section">
@@ -84,7 +84,7 @@
                   <div [ngClass]="{
                           'col-lg-2': !(isXsOrSm$ | async),
                           'col-lg-12': (isXsOrSm$ | async)
-                        }" class="p-3" (click)="gotsearchpage(filter._links.search.href.split('?')[1])">
+                        }" class="p-3" (click)="gotsearchpage(filter?._links ? filter?._links?.search?.href?.split('?')[1] : '')">
             
                     <div class="d-flex flex-column h-100 justify-content-center image-card">
                       <div class="d-flex align-items-center justify-content-center image-placeholder">

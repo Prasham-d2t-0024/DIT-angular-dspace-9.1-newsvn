@@ -60,7 +60,7 @@ import { FollowLinkConfig } from '../utils/follow-link-config.model';
 /**
  * Component that represents the search form
  */
-export class SearchFormComponent implements OnChanges,OnInit {
+export class SearchFormComponent implements OnChanges, OnInit {
   /**
    * The search query
    */
@@ -150,14 +150,14 @@ export class SearchFormComponent implements OnChanges,OnInit {
     this.config.currentPage = 1;
     this.sortConfig = new SortOptions('dc.title', SortDirection.ASC);
   }
-  
+
   ngOnInit(): void {
     this.setMetadataFields();
     this.initPage();
   }
 
   initPage() {
-     const pagination$ = this.paginationService.getCurrentPagination(this.config.id, this.config);
+    const pagination$ = this.paginationService.getCurrentPagination(this.config.id, this.config);
     const sort$ = this.paginationService.getCurrentSort(this.config.id, this.sortConfig);
 
     this.currentPageSubscription = observableCombineLatest([pagination$, sort$]).pipe(
@@ -263,7 +263,7 @@ export class SearchFormComponent implements OnChanges,OnInit {
     });
   }
 
-   onSelected(value: string): void {
+  onSelected(value: string): void {
     this.selectedTeam = value;
   }
 
@@ -271,27 +271,119 @@ export class SearchFormComponent implements OnChanges,OnInit {
     this.scope = value;
   }
 
-  setMetadataFields(){
+  setMetadataFields() {
     this.metadataFields = [
-      { id:1, label: "Author", metadata: "dc.author", filterKey: "author" },
-      { id:2, label: "Title", metadata: "dc.title", filterKey: "title" },
-      { id:3, label: "Endorsed", metadata: "obps.endorsementExternal.externalEndorsedBy", filterKey: "externalEndorsedBy" },
-      { id:4, label: "Language", metadata: "dc.language.iso", filterKey: "language" },
-      { id:5, label: "EOV", metadata: "dc.description.eov", filterKey: "eov" },
-      { id:6, label: "SDG", metadata: "dc.description.sdg", filterKey: "sdg" },
-      { id:7, label: "Journal Title", metadata: "dc.bibliographicCitation.title", filterKey: "bibliographicCitationTitle" },
-      { id:8, label: "Issuing Agency", metadata: "dc.publisher", filterKey: "publisher" },
-      { id:9, label: "DOI", metadata: "dc.identifier.doi", filterKey: "doi" },
-      { id:10, label: "EBV", metadata: "dc.description.ebv", filterKey: "ebv" },
-      { id:11, label: "ECV", metadata: "dc.description.ecv", filterKey: "ecv" },
-      { id:12, label: "Adoption Level", metadata: "dc.description.adoption", filterKey: "adoption" },
-      { id:13, label: "Spatial Coverage", metadata: "dc.coverage.spatial", filterKey: "spatial" },
-      { id:14, label: "Maturity Level", metadata: "dc.description.maturitylevel", filterKey: "maturitylevel" }
+      {
+        id: 1,
+        label: "Author",
+        description: 'Search using the author’s family name. You may use just the family name; include initials or full name if the surname is common. Example: Smith; Smith, Courtney',
+        metadata: "dc.author",
+        filterKey: "author"
+      },
+      {
+        id: 2,
+        label: "Title",
+        description: 'Search using at least the first few words of the title. If you know the full title, use it . Example: OceanGliders Oxygen SOP',
+        metadata: "dc.title",
+        filterKey: "title"
+      },
+      {
+        id: 3,
+        label: "Endorsed",
+        description: 'Search by the name of the endorsing organization. Example: GOOS,  or if you do not know it, use the Title search field and search for ENDORSED PRACTICE',
+        metadata: "obps.endorsementExternal.externalEndorsedBy",
+        filterKey: "externalEndorsedBy"
+      },
+      {
+        id: 4,
+        label: "Language",
+        description: 'Search by the document’s language using the ISO abbreviation. Example: en; es; de; fr; pt. (See the list of language codes: https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)',
+        metadata: "dc.language.iso",
+        filterKey: "language"
+      },
+      {
+        id: 5,
+        label: "EOV",
+        description: 'Search for the significant word in the Essential Ocean Variable or its full name. Example: Zooplankton;   Zooplankton biomass and diversity.<br> (See the EOV list : https://goosocean.org/what-we-do/framework/essential-ocean-variables/)',
+        metadata: "dc.description.eov",
+        filterKey: "eov"
+      },
+      {
+        id: 6,
+        label: "SDG",
+        description: 'Search by the SDG number, including sub-goals where applicable. Example: 14 or 14.1 or 14.1.1. (See the SDG list for reference: https://sdgs.un.org/goals)',
+        metadata: "dc.description.sdg",
+        filterKey: "sdg"
+      },
+      {
+        id: 7,
+        label: "Journal Title",
+        description: 'Search for the full journal title or one or more distinctive words from it. Example: Methods; Remote Sensing of Environment',
+        metadata: "dc.bibliographicCitation.title",
+        filterKey: "bibliographicCitationTitle"
+      },
+      {
+        id: 8,
+        label: "Issuing Agency",
+        description: 'Search for the full name of the issuing agency or publisher. Example: UNESCO; European Commission',
+        metadata: "dc.publisher",
+        filterKey: "publisher"
+      },
+      {
+        id: 9,
+        label: "DOI",
+        description: 'Search using the DOI. Example: 10.2788/4295; 10.1088/0026-1394/53/1/R1',
+        metadata: "dc.identifier.doi",
+        filterKey: "doi"
+      },
+      {
+        id: 10,
+        label: "EBV",
+        description: 'Search for the full name of the EBV. Example: Interaction diversity. (See the EBV list: https://geobon.org/ebvs/what-are-ebvs/)',
+        metadata: "dc.description.ebv",
+        filterKey: "ebv"
+      },
+      {
+        id: 11,
+        label: "ECV",
+        description: 'Search for the full name of the ECV. Example: Atmosphere surface pressure. (See the ECV list: https://gcos.wmo.int/site/global-climate-observing-system-gcos/essential-climate-variables)',
+        metadata: "dc.description.ecv",
+        filterKey: "ecv"
+      },
+      {
+        id: 12,
+        label: "Adoption Level",
+        description: 'Search using one of the predefined adoption levels: Novel; Validated; Organizational; Multi-Organizational; National; International',
+        metadata: "dc.description.adoption",
+        filterKey: "adoption"
+      },
+      {
+        id: 13,
+        label: "Spatial Coverage",
+        description: 'Search using standardized Marine Regions terms. Example: North Atlantic Ocean',
+        metadata: "dc.coverage.spatial",
+        filterKey: "spatial"
+      },
+      {
+        id: 14,
+        label: "Maturity Level",
+        description: 'Search using one of the defined maturity levels: Concept ; Pilot or Demonstrated: Mature; N/A',
+        metadata: "dc.description.maturitylevel",
+        filterKey: "maturitylevel"
+      }
     ]
   }
 
-  onMetadataSelected(value){
+  onMetadataSelected(value) {
     this.selectedMetadataValue = value;
     this.selectedMetadata = this.metadataFields.find(field => field.label === value)?.filterKey || '';
+  }
+
+  sanitizeDescription(desc: string): string {
+    return desc?.replace(/<br\s*\/?>/gi, ' ');
+  }
+
+  sanitizeDescriptionForTitle(desc: string): string {
+    return desc?.replace(/<br\s*\/?>/gi, '\n');
   }
 }

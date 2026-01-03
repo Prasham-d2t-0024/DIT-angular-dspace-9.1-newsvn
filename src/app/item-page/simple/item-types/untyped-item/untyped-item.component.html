@@ -801,7 +801,7 @@
             <span class="text-secondary h6">{{'untypeitem.metadata.externalEndorsedBy' | translate}}: </span>
             <ng-container
               *ngFor="let person of object.allMetadataValues('obps.endorsementExternal.externalEndorsedBy'); let last = last;">
-              <a [href]="person" target="_blank">{{person}}</a>
+              <span>{{person}}</span>
               <!-- <span>{{person}}</span> -->
               <span *ngIf="!last"> | </span>
             </ng-container>

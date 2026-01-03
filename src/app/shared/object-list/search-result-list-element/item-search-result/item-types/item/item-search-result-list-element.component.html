@@ -1,4 +1,5 @@
 <div class="row item-card justify-content-center"
+  [ngClass]="{'mt-0': isTrendingItemPage}"
   style="margin-left: 0px!important;margin-right: 0px!important;padding-bottom: 0px!important;padding-left: 0px!important;">
   @if (showThumbnails) {
   <div class="col-3 col-md-2 image-logo">
@@ -380,22 +381,28 @@
     <ul>
       <li class="icon-text border-end" title="{{'home.label.attachmentscount' | translate}}">
         <i class="fa fa-paperclip mr-3" aria-hidden="true"></i>
-        <span>{{dso.bitstreamcount}}</span>
+        <span>{{formatCount(dso.bitstreamcount)}}</span>
       </li>
       <li class="icon-text" [ngClass]="{'border-end': (allowCommenting || allowRating)}" title="{{'home.label.viewcount' | translate}}">
         <i class="fa fa-eye mr-3" aria-hidden="true"></i>
-        <span>{{dso.viewcount}}</span>
+        <span>{{formatCount(dso.viewcount)}}</span>
       </li>
       @if(allowRating){
         <li class="icon-text" [ngClass]="{'border-end': allowCommenting}" title="{{'home.label.avgreting' | translate}}">
           <i class="fa fa-star mr-3" aria-hidden="true"></i>
-          <span>{{dso.ratinavg}}</span>
+          <span>{{formatCount(dso.ratinavg)}}</span>
         </li>
       }
       @if(allowCommenting){
-        <li class="icon-text" style="border: none!important;" title="{{'home.label.commentcount' | translate}}">
+        <li class="icon-text" [ngClass]="{'border-end': isTrendingItemPage}" title="{{'home.label.commentcount' | translate}}">
           <i class="fa fa-comment mr-3 font-wight-info" aria-hidden="true"></i>
-          <span>{{dso.commentcount}}</span>
+          <span>{{formatCount(dso.commentcount)}}</span>
+        </li>
+      }
+      @if(isTrendingItemPage){
+        <li class="icon-text" style="border: none!important;" title="{{'home.label.downloadcount' | translate}}">
+          <i class="fa fa-download mr-3 font-wight-info" aria-hidden="true"></i>
+          <span>{{formatCount(dso.download)}}</span>
         </li>
       }
     </ul>

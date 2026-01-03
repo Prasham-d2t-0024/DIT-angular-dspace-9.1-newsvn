@@ -49,6 +49,7 @@ import { provideSubmissionState } from './submission/provide-submission-state';
 import { SUGGESTION_MODULE_PATH } from './suggestions-page/suggestions-page-routing-paths';
 import { AboutComponent } from './about/about.component';
 import { i18nBreadcrumbResolver } from './core/breadcrumbs/i18n-breadcrumb.resolver';
+import { TopTrendingItemsComponent } from './top-trending-items/top-trending-items.component';
 
 export const APP_ROUTES: Route[] = [
   { path: INTERNAL_SERVER_ERROR, component: ThemedPageInternalServerErrorComponent },
@@ -98,6 +99,11 @@ export const APP_ROUTES: Route[] = [
         loadChildren: () => import('./lookup-by-id/lookup-by-id-routes')
           .then((m) => m.ROUTES),
         canActivate: [endUserAgreementCurrentUserGuard],
+      },
+      {
+        path: 'top-trending-items',
+        component: TopTrendingItemsComponent,
+        // canActivate: [authenticatedGuard],
       },
       {
         path: REGISTER_PATH,

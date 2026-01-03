@@ -18,19 +18,25 @@
 
       @if (metadataFields.length) {
         <select #metadata (change)="onMetadataSelected(metadata.value)"
-          class="col-12 col-sm-3 col-md-2 bg-white mb-2 mb-sm-0 dropdown input-child form-select"
+          class="col-12 col-sm-6 col-md-5 bg-white mb-2 mb-sm-0 dropdown input-child form-select"
           name="metadataFields" id="metadatafields">
           <option value="123" selected>{{'search.form.metadata.all' | translate}}</option>
           @for(field of metadataFields; track field.id) {
           <ng-container>
-            <option [value]="field.label">{{field.label}}</option>
+            <option [value]="field.label">{{field.label}} : {{field.description}}</option>
+            <!-- <option [value]="field.label">
+              <span>
+                {{field.label}}
+              </span>&nbsp;
+              <i [title]="field.description" class="fa-solid fa-circle-info"></i>
+            </option> -->
           </ng-container>
           }
         </select>
       }
 
       <input type="text" [(ngModel)]="query" name="query"
-      class="col-12 col-sm-5 col-md-7 mb-2 mb-sm-0 border-end-0 input-child" [attr.aria-label]="searchPlaceholder"
+      class="col-12 col-sm-6 col-md-7 mb-2 mb-sm-0 border-end-0 input-child" [attr.aria-label]="searchPlaceholder"
       [attr.data-test]="'search-box' | dsBrowserOnly" [placeholder]="searchPlaceholder" tabindex="0">
 
       <!-- @if (contenttype != null) {

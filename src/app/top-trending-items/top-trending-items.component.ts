@@ -11,17 +11,16 @@ import { ChartService } from 'src/app/core/shared/trending-charts/chart.service'
 import { ViewMode } from 'src/app/core/shared/view-mode.model';
 import { ListableObjectComponentLoaderComponent } from 'src/app/shared/object-collection/shared/listable-object/listable-object-component-loader.component';
 import { followLink, FollowLinkConfig } from 'src/app/shared/utils/follow-link-config.model';
-import { HomeLineChartComponent } from '../home-line-chart/home-line-chart.component';
-import { HomeBarChartComponent } from '../home-bar-chart/home-bar-chart.component';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthorizationDataService } from 'src/app/core/data/feature-authorization/authorization-data.service';
 import { FeatureID } from 'src/app/core/data/feature-authorization/feature-id';
 import { AuthService } from 'src/app/core/auth/auth.service';
 import { hasValue } from 'src/app/shared/empty.util';
 import { URLCombiner } from 'src/app/core/url-combiner/url-combiner';
-
+import { HomeBarChartComponent } from '../home-page/home-bar-chart/home-bar-chart.component';
+import { HomeLineChartComponent } from '../home-page/home-line-chart/home-line-chart.component';
 @Component({
-  selector: 'ds-home-trending-item',
+  selector: 'ds-top-trending-items',
   standalone: true,
   imports: [
     TranslateModule,
@@ -31,11 +30,11 @@ import { URLCombiner } from 'src/app/core/url-combiner/url-combiner';
     HomeBarChartComponent,
     NgbTooltipModule
   ],
-  templateUrl: './home-trending-item.component.html',
-  styleUrl: './home-trending-item.component.scss'
+  templateUrl: './top-trending-items.component.html',
+  styleUrl: './top-trending-items.component.scss'
 })
-export class HomeTrendingItemComponent {
-  @Input() collectionorCommunityId;
+export class TopTrendingItemsComponent {
+  // @Input() collectionorCommunityId;
   @Input() type;
   cardChartdata = [];
   lineChartdata = [];
@@ -113,19 +112,21 @@ export class HomeTrendingItemComponent {
   }
 
   loadData(): void {
-    this.isLoading = true;
-    const apiEndPoint = this.collectionorCommunityId
-      ? `/getTopViewItemCount?dateType=${this.i}&top=10&collectionorcommunityid=${this.collectionorCommunityId}&type=${this.type}`
-      : `/getTopViewItemCount?dateType=${this.i}&top=10`;
+  this.isLoading = true;
 
-    this.itemdataservice.searchBy(apiEndPoint).subscribe((data) => {
+  // const apiCall = this.collectionorCommunityId
+  //   ? `/search/getTopViewItemCount?dateType=${this.i}&top=10&collectionorcommunityid=${this.collectionorCommunityId}&type=${this.type}`
+  //   : `/search/getTopViewItemCount?dateType=${this.i}&top=10`;
+
+  const apiEndPoint = `/getTopViewItemDownloadCount?top=50`;
+  this.itemdataservice.searchBy(apiEndPoint).subscribe((data) => {
       this.isLoading = false;
       if (data && data?.payload?.page) {
         this.cardData = data.payload.page;
-        this.cardData.map((item: any)=>{
-          item['downloadData'] = this.transformChartData(item.itemCardData?.downlodeDatapoint);
-          item['viewData'] = this.transformChartData(item.itemCardData?.viewDataPoint);
-        })
+        // this.cardData.map((item: any)=>{
+        //   item['downloadData'] = this.transformChartData(item.itemCardData?.downlodeDatapoint);
+        //   item['viewData'] = this.transformChartData(item.itemCardData?.viewDataPoint);
+        // })
       }
       this.cdRef.detectChanges();
     },(error)=>{
@@ -133,7 +134,7 @@ export class HomeTrendingItemComponent {
       console.error('Error fetching chart data:', error);
       this.cdRef.detectChanges();
     })
-  }
+}
 
 /**
  * Helper function to transform chart data into unique series format
@@ -169,7 +170,7 @@ private transformChartData(data: any): { name: string; value: number }[] | null 
 
   linksToFollow: FollowLinkConfig<Item>[] = [followLink('thumbnail')];
 
-  castingObject(item: any) {
+  castingObject(item: Item) {
     return this.itemdataservice.findById(item.id, true, true, ...this.linksToFollow);
   }
 
@@ -260,4 +261,5 @@ private transformChartData(data: any): { name: string; value: number }[] | null 
       console.error('Error downloading the ZIP file', error);
     })
   }
+
 }

@@ -5556,7 +5556,7 @@
 
   "submission.sections.submit.progressbar.identifiers": "Identifiers",
 
-  "submission.sections.submit.progressbar.license": "Deposit license",
+  "submission.sections.submit.progressbar.license": "Deposit agreement",
 
   "submission.sections.submit.progressbar.sherpapolicy": "Sherpa policies",
 
@@ -5692,7 +5692,7 @@
 
   "submission.sections.duplicates.in-workflow": "This item is in workflow",
 
-  "submission.sections.license.granted-label": "I confirm the license above",
+  "submission.sections.license.granted-label": "I acknowledge this agreement",
 
   "submission.sections.license.required": "You must accept the license",
 
@@ -7286,7 +7286,6 @@
   "community.trending.metrics": "Trending Metrics",
   "home.label.commentcount": "Comment Count",
   "home.label.homepagecarousel":"The Ocean Best Practices System (OBPS) is a secure, permanent, global repository of ocean research, operations, data and information management and applications methodologies (often referred to as ‘best practices’). These are methods that the providers have found valuable, however not all of them have been shown to be ‘better’ than other similar methods. Inclusion of a methodology in the OBPS, does not indicate that the methodology is recommended by OBPS.",
-  "home.label.commentcount": "Comment Count",
   "untypeitem.metadata.commentstitle": "Comments",
   "untypeitem.metadata.subtitle": "(Leave your Comments here about this item.)",
   "untypeitem.metadata.placeholder": "Enter Comments here",
@@ -7510,4 +7509,6 @@
   "search.filters.filter.ecv.head":"ECV",
   "search.filters.filter.ecv.placeholder":"ECV",
   "communityList.search.placeholder":"Seach Communities",
+  "submission.sections.edit.info": "Click on edit button against each uploaded file and provide  there a description of the file uploaded eg.PDF; PDF [German Version] VIDEO_MP4 PDF {Chapter 4 only}",
+  "home.label.downloadcount": "Download Count",
 }

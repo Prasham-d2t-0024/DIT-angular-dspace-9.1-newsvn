@@ -93,6 +93,7 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
   isMobileView:boolean = false;
   allowCommenting:boolean = false;
   allowRating:boolean = false;
+  isTrendingItemPage: boolean = false;
 
   constructor(
     protected bitstreamDataService: BitstreamDataService,
@@ -128,6 +129,7 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
     this.itemPageRoute = getItemPageRoute(this.dso);
     this.allowCommenting = this.featureConfigService.allowCommenting;
     this.allowRating = this.featureConfigService.allowRating;
+    this.isTrendingItemPage = window.location.href.includes('top-trending-items');
   }
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -275,6 +277,19 @@ export class ItemSearchResultListElementComponent extends SearchResultListElemen
     }
   
     return this.sanitizer.bypassSecurityTrustResourceUrl(extractedLink);
+  }
+
+  formatCount(num) {
+    if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(1) + 'B';
+    }
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
   }
 
 }

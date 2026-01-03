@@ -226,14 +226,25 @@ export class HomePageComponent implements OnInit, AfterViewInit {
           getFirstSucceededRemoteData(),
           take(1)
         ).subscribe((rd: any) => {
-          const cnt = Number(rd?.payload?.count) || 0;
-          this.totalItemsCount = cnt;
+          const data = rd?.payload || 0;
+          this.totalItemsCount = Number(data?.count) || 0;
           const totalItem: any = {
             label: 'Total Items',
-            count: cnt,
+            count: this.totalItemsCount,
           };
 
-          const a = [...sorted, totalItem];
+          let endourcedByCount = Number(data?.externalby) || 0;
+           const totalEndourcedByCount: any = {
+            label: 'Total Endorsed By Count',
+            count: endourcedByCount,
+          };
+
+          const TopItems:any = {
+            label: 'Top Items',
+            count: 50,
+          }
+
+          const a = [...sorted, totalItem, TopItems, totalEndourcedByCount];
           this.contenttype = a;
 
           this.dctype = [];
@@ -281,9 +292,18 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   }
 
   gotsearchpage(query) {
-    let data = query.split('=');
-    const queryParams = { [data[0]]: decodeURI(data[1]) };
-    this._router.navigate(['/search'], { queryParams });
+    if(query.length){
+      let data = query.split('=');
+      const queryParams = { [data[0]]: decodeURI(data[1]) };
+      this._router.navigate(['/search'], { queryParams });
+    }else{
+      this._router.navigate(['/top-trending-items']);
+      // const url = this._router.serializeUrl(
+      //   this._router.createUrlTree(['/top-trending-items'])
+      // );
+
+      // window.open(url, '_blank');
+    }
   }
 
    /**
