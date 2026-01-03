@@ -5,7 +5,7 @@
            <!-- Copyright -->
   <div class="bottom-footer p-1 d-flex flex-column flex-md-row justify-content-center align-items-center text-white">
     <div class="content-container align-self-center">
-      <p class="m-0 copy-rights"  [innerHTML]="'footer.link.dspace' | translate"></p>
+      <p class="m-0 copy-rights"  [innerHTML]="'footer.link.dspace' | translate : {year : currentYear}"></p>
       <ul class="footer-info list-unstyled d-flex justify-content-center mb-0">
         @if (showCookieSettings) {
         <li>

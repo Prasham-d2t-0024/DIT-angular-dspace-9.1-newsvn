@@ -1,5 +1,6 @@
 import { AsyncPipe, CommonModule, isPlatformBrowser } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Inject,
@@ -115,6 +116,7 @@ export class SubComColSectionComponent implements OnInit {
     public dsoNameService: DSONameService,
     public cds: CommunityDataService,
     public paginationService: PaginationService,
+    public cdref:ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: any
   ) { }
 
@@ -192,6 +194,7 @@ export class SubComColSectionComponent implements OnInit {
         ).subscribe((results) => {
           this.subCommunitiesRDObs.next(results);
           this.totalCommunityElements = results.payload?.totalElements;
+          this.cdref.detectChanges();
         })
       }
     });
@@ -202,8 +205,10 @@ export class SubComColSectionComponent implements OnInit {
       setTimeout(() => {
           if (this.totalCommunityElements > 0 && this.communityTab) {
             this.communityTab.nativeElement.click();
+            this.cdref.detectChanges();
           } else if (this.collectionTab) {
             this.collectionTab.nativeElement.click();
+            this.cdref.detectChanges();
           }
         }, 300);
     }

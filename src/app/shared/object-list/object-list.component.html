@@ -18,7 +18,7 @@
   @if (objects?.hasSucceeded) {
     <ul class="list-unstyled" [ngClass]="{'ml-4': selectable}" data-test="objects">
       @for (object of objects?.payload?.page; track object; let i = $index; let last = $last) {
-        <li class="d-flex" [class.border-bottom]="hasBorder && !last" [attr.data-test]="'list-object' | dsBrowserOnly">
+        <li class="d-flex mb-2" [class.border-bottom]="hasBorder && !last" [attr.data-test]="'list-object' | dsBrowserOnly">
           @if (selectable) {
             <ds-selectable-list-item-control [index]="i"
               [object]="object"
@@ -31,13 +31,13 @@
               [importConfig]="importConfig"
             (importObject)="importObject.emit($event)"></ds-importable-list-item-control>
           }
-          <ds-listable-object-component-loader [object]="object"
-            [viewMode]="viewMode"
-            [index]="i"
-            [context]="context"
-            [linkType]="linkType"
-            [listID]="selectionConfig?.listId"
-          (contentChange)="contentChange.emit($event)"></ds-listable-object-component-loader>
+            <ds-listable-object-component-loader [object]="object"
+              [viewMode]="viewMode"
+              [index]="i"
+              [context]="context"
+              [linkType]="linkType"
+              [listID]="selectionConfig?.listId"
+            (contentChange)="contentChange.emit($event)"></ds-listable-object-component-loader>
         </li>
       }
     </ul>

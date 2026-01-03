@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, Input, Inject, PLATFORM_ID, ElementRef } from '@angular/core';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
 import { trigger, transition, animate, style } from "@angular/animations";
 import { ActivatedRoute, Router, Data, RouterModule } from '@angular/router';
 import { hasValue, isNotEmpty } from '../empty.util';
@@ -24,7 +24,7 @@ import { followLink } from '../../shared/utils/follow-link-config.model';
 import { BitstreamDataService } from '../../core/data/bitstream-data.service';
 import { PaginatedList } from '../../core/data/paginated-list.model';
 import { NotificationsService } from '../../shared/notifications/notifications.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { NgbNavChangeEvent, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { DSONameService } from 'src/app/core/breadcrumbs/dso-name.service';
@@ -40,6 +40,7 @@ import { TruncatableComponent } from '../truncatable/truncatable.component';
 import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
 import { ThemedLoadingComponent } from '../loading/themed-loading.component';
 import { AuthTokenInfo } from 'src/app/core/auth/models/auth-token-info.model';
+import { HostWindowService } from '../host-window.service';
 @Component({
   selector: 'ds-display-bitstream',
   templateUrl: './display-bitstream.component.html',
@@ -53,7 +54,8 @@ import { AuthTokenInfo } from 'src/app/core/auth/models/auth-token-info.model';
     RouterModule,
     PdfJsViewerModule,
     NgbNavModule,
-    ThemedLoadingComponent
+    ThemedLoadingComponent,
+    TranslateModule,
   ],
   animations: [
     trigger("slideInOut", [
@@ -108,6 +110,7 @@ export class DisplayBitstreamComponent implements OnInit, AfterViewInit {
   isLoading:boolean = false;
   safeUrl: any;
   showPVTFile:boolean;
+  isMobileView = false;
   @ViewChild('videoPlayer') videoPlayer: ElementRef<HTMLVideoElement>;
   @ViewChild('audioPlayer') audioPlayer: ElementRef<HTMLVideoElement>;
   constructor(
@@ -126,9 +129,17 @@ export class DisplayBitstreamComponent implements OnInit, AfterViewInit {
     private cdRef: ChangeDetectorRef,
     protected paginationService: PaginationService,
     private sanitizer: DomSanitizer,
+    private windowService: HostWindowService,
     @Inject(APP_CONFIG) protected appConfig: AppConfig
   ) {
-    
+    if (isPlatformBrowser(this.platformId)) {
+      this.windowService.isXsOrSm().pipe(
+        first()
+      ).subscribe((isMobile) => {
+        this.isMobileView = isMobile;
+        this.leftOpen = isMobile ? false : true;
+      });
+    }
   }
   public callme(): void {
     this.route.data.subscribe((data: Data) => {
@@ -144,7 +155,7 @@ export class DisplayBitstreamComponent implements OnInit, AfterViewInit {
         getRemoteDataPayload(),
       ).subscribe((response: Bitstream) => {
         this.auth.getShortlivedToken().pipe(take(1), map((token) =>
-          hasValue(token) ? new URLCombiner(response._links.content.href,`?authentication-token=${token}&isDownload=true`).toString() : response._links.content.href)).subscribe((logs: string) => {
+          hasValue(token) ? new URLCombiner(response._links.content.href,`?authentication-token=${token}&isDownload=true`).toString() : new URLCombiner(response._links.content.href,`?isDownload=true`).toString())).subscribe((logs: string) => {
             const token: AuthTokenInfo = this.auth.getToken();
            let authorization = this.auth.buildAuthHeader(token);
             this.cdRef.detectChanges();

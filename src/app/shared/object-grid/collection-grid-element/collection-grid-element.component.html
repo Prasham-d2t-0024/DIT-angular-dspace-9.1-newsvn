@@ -12,15 +12,15 @@
     </span>
   }
   <div class="card-body">
-    <h4 class="card-title">{{ dsoNameService.getName(object) }}</h4>
+    <a class="card-title h4 text-primary" [routerLink]="['/collections/', object.id]">{{ dsoNameService.getName(object) }}</a>
     @if (object.shortDescription) {
       <p class="card-text">{{object.shortDescription}}</p>
     }
-    @if (linkType !== linkTypes.None) {
+    <!-- @if (linkType !== linkTypes.None) {
       <div class="text-center">
         <a [target]="(linkType === linkTypes.ExternalLink) ? '_blank' : '_self'" [attr.rel]="(linkType === linkTypes.ExternalLink) ? 'noopener noreferrer' : null" [routerLink]="['/collections/', object.id]" class="lead btn btn-primary viewButton">{{ 'search.results.view-result' | translate}}</a>
       </div>
-    }
+    } -->
     <div class="bottem-count-text mt-3 w-100">
       <ul>
         <li class="icon-text  border-end" title="{{'home.label.itemcount' | translate}}">

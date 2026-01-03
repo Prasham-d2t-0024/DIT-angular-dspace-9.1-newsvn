@@ -1,12 +1,10 @@
-<div class="container-fluid p-0">
+<!-- <div class="container-fluid p-0">
   <div class="row m-0 mt-2">
 
-    <!-- Left Sidebar -->
     @if (leftOpen) {
     <div class="col-3" [@slideInOut]>
       <ul ngbNav #nav="ngbNav" (navChange)="onNavChange($event)" [(activeId)]="active" class="nav-tabs">
 
-        <!-- Tab 1: Properties -->
         <li [ngbNavItem]="1">
           <a ngbNavLink>Properties</a>
           <ng-template ngbNavContent>
@@ -14,7 +12,6 @@
           </ng-template>
         </li>
 
-        <!-- Tab 2: List of Files -->
         <li [ngbNavItem]="2" style="height: 100%;">
           <a ngbNavLink>List of Files</a>
           <ng-template ngbNavContent>
@@ -51,7 +48,6 @@
     </div>
     }
 
-    <!-- Right Content -->
     <div class="mb-2" [ngClass]="{'col-9': leftOpen,'col-12': !leftOpen}">
       @if (!leftOpen) {
       <img (click)="fullleftC()" class="leftFull cursor" src="assets/dsquareIcon/rightFull.png" alt="" />
@@ -91,6 +87,171 @@
               Your browser does not support the video tag.
             </video>
           </div>
+          }
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div class="container-fluid p-0">
+  <div class="row m-0 mt-2">
+    <!-- Left Sidebar with Responsive Design -->
+    @if (leftOpen) {
+    <div 
+      [ngClass]="{'col-12': isMobileView, 'col-md-3': !isMobileView}" 
+      [@slideInOut]
+      class="position-relative">
+      
+      <div [ngClass]="isMobileView ? 'mobile-sidebar' : 'desktop-sidebar'">
+        <!-- Close Button for Sidebar -->
+        <div class="text-end sidebar-close-btn pb-2">
+          @if (leftOpen && isMobileView) {
+            <button class="btn btn-primary" (click)="fullleftC()">
+              <i class="me-2 fa fa-arrow-left close-btn cursor-pointer"></i>
+              {{'bitstream.closeSidebar' | translate}}
+            </button>
+          }
+        </div>
+        <ul ngbNav #nav="ngbNav" (navChange)="onNavChange($event)" [(activeId)]="active" class="nav-tabs">
+
+          <!-- Tab 1: Properties -->
+          <li [ngbNavItem]="1">
+            <a ngbNavLink>Properties</a>
+            <ng-template ngbNavContent>
+              <ds-show-item-metadata [itemTab]="itemTab"></ds-show-item-metadata>
+            </ng-template>
+          </li>
+
+          <!-- Tab 2: List of Files -->
+          <li [ngbNavItem]="2">
+            <a ngbNavLink>List of Files</a>
+            <ng-template ngbNavContent>
+                @if ((originals$ | async)?.payload; as originals) {
+                  <div [ngClass]="isMobileView ? 'mobile-file-list' : 'desktop-file-list'">
+                    <div class="file-list">
+                      @for (file of originals?.page; track file; let i = $index) {
+                        <div class="file-item d-flex justify-content-between align-items-center py-2 px-1">
+                          <a 
+                            style="cursor: pointer; flex: 1;" 
+                            (click)="showpdf(file); isMobileView && fullleftC()" 
+                            class="file-link text-decoration-none">
+                            <span class="file-name text-black" [title]="file.firstMetadataValue('dc.description') ?? dsoNameService.getName(file)">
+                              {{ i + 1 }}. {{ file.firstMetadataValue('dc.description') ?? dsoNameService.getName(file) }}
+                            </span>
+                          </a>
+                          <a 
+                            style="cursor: pointer;" 
+                            (click)="downloadPdf(file)" 
+                            title="Download File"
+                            class="ms-2">
+                            <i class="fa fa-download text-primary" aria-hidden="true"></i>
+                          </a>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="p-2 bg-white side-panel"></div>
+      </div>
+    </div>
+  }
+
+    <!-- Toggle Button when Sidebar is Closed -->
+    @if (!leftOpen && !isMobileView) {
+      <div class="col-1 d-flex align-items-start">
+            <i class="fa fa-arrow-right close-btn cursor-pointer" (click)="fullleftC()"></i>
+      </div>
+    }
+
+    <!-- Right Content Area -->
+    <div 
+      class="mb-2 content-area d-flex flex-column" 
+      [ngClass]="{
+        'col-12': !leftOpen || isMobileView,
+        'col-md-9': leftOpen && !isMobileView,
+        'col-11': !leftOpen && !isMobileView
+      }">
+      
+      <!-- Mobile Menu Button -->
+      @if (!leftOpen && isMobileView) {
+        <button 
+          (click)="fullleftC()" 
+          style="width: 40%;"
+          class="ps-0 btn btn-primary mb-2">
+          <i class="me-2 fa fa-arrow-right"></i>
+          {{'bitstream.openSidebar' | translate}}
+        </button>
+      }
+
+      <div class="viewer-body">
+        <ng-container>
+          <!-- Loading State -->
+          @if (isLoading) {
+            <ds-loading [showMessage]="false"></ds-loading>
+          }
+
+          <!-- PDF Viewer -->
+          @if (!player3 && !player4 && !isLoading) {
+            <div class="viewer-container">
+              @if (!showPVTFile && !pdfviwerhide && !player3 && !player4) {
+                <ng2-pdfjs-viewer 
+                  #pdfViewer 
+                  [download]="false" 
+                  [print]="false" 
+                  [openFile]="false" 
+                  [fullScreen]="false"
+                  [viewBookmark]="false" 
+                  [showSpinner]="true" 
+                  downloadFileName="currentFileViewing">
+                </ng2-pdfjs-viewer>
+              }
+              
+              @if (showPVTFile) {
+                <div #viewerContainer class="pvt-viewer"></div>
+              }
+              
+              @if (pdfviwerhide && !player3 && !player4) {
+                <iframe 
+                  #iframe 
+                  class="document-iframe" 
+                  [src]="safeUrl" 
+                  frameborder="0">
+                </iframe>
+              }
+            </div>
+          }
+
+          <!-- Audio Player -->
+          @if (pdfviwerhide && player3 && !player4 && !isLoading) {
+            <div class="audio-container">
+              <audio 
+                controls 
+                controlsList="nodownload" 
+                #audioPlayer 
+                class="w-100">
+                <source [src]="filePath" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          }
+
+          <!-- Video Player -->
+          @if (pdfviwerhide && !player3 && player4 && !isLoading) {
+            <div class="video-container">
+              <video 
+                controls 
+                controlsList="nodownload" 
+                #videoPlayer 
+                class="w-100 h-100">
+                <source [src]="filePath" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
           }
         </ng-container>
       </div>

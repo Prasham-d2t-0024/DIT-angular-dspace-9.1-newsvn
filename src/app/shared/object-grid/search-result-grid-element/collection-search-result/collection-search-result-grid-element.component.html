@@ -15,15 +15,27 @@
     @if (showLabel) {
       <ds-badges [object]="dso" [context]="context"></ds-badges>
     }
-    <h4 class="card-title">{{ dsoNameService.getName(dso) }}</h4>
+    <a class="h4 card-title" [routerLink]="['/collections/',  dso.id]">{{ dsoNameService.getName(dso) }}</a>
     @if (dso.shortDescription) {
       <p class="card-text">{{dso.shortDescription}}</p>
     }
     @if (linkType !== linkTypes.None) {
-      <div class="text-center">
+      <!-- <div class="text-center">
         <a [target]="(linkType === linkTypes.ExternalLink) ? '_blank' : '_self'" [attr.rel]="(linkType === linkTypes.ExternalLink) ? 'noopener noreferrer' : null" [routerLink]="['/collections/',  dso.id]" class="lead btn btn-primary viewButton">{{ 'search.results.view-result' | translate}}</a>
-      </div>
+      </div> -->
     }
+    <div class="bottem-count-text mt-3 w-100">
+      <ul>
+        <li class="icon-text  border-end" title="{{'home.label.itemcount' | translate}}">
+          <i class="fa fa-file mr-3" aria-hidden="true"></i>
+          <span>{{object?.itemCount}}</span>
+        </li>
+        <li class="icon-text  " title="{{'home.label.viewcount' | translate}}">
+          <i class="fa fa-eye mr-3" aria-hidden="true"></i>
+          <span>{{object?.viewCount}}</span>
+        </li>
+      </ul>
+    </div>
   </div>
   <ng-content></ng-content>
 </div>

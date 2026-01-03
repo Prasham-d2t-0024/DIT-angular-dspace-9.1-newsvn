@@ -1381,7 +1381,7 @@
   </div>
 </div>
 <ng-template #content let-modal>
-  <div class="row bg-white">
+  <!-- <div class="row bg-white">
       <div class="modal-header">
         <h5 class="modal-title" id="modal-basic-title">
           <span class="citation-label">{{'item.page.citation' | translate}} :</span>
@@ -1394,7 +1394,6 @@
       <div class="container modal-body">
         <div class="row">
           <div class="col-12">
-            <!-- <p #userinput>{{citation}}</p> -->
             <div class="main-div" *ngFor="let item of citation">
               <div class="key">{{item[0]}}</div>
               <div class="value" #userInput>
@@ -1403,7 +1402,6 @@
             </div>
           </div>
           <div class="col-12 d-flex border-top mt-3 pt-3">
-            <!-- <label class="form-check-label">Style</label> -->
           <select class="form-control me-3" [(ngModel)]="citationselection">
           <option value="RefMan" selected>{{'home.label.refman' | translate}}</option>
           <option value="EndNote">{{'home.label.endnote' | translate}}</option>
@@ -1415,5 +1413,49 @@
           </div>
         </div>
       </div>
+  </div> -->
+  <div class="modal show d-block" tabindex="-1" role="dialog" id="exampleModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="justify-content: space-between;">
+        <h5 class="modal-title" id="modal-basic-title">
+          <span class="citation-label">{{'item.page.citation' | translate}} :</span>
+          <span class="dso-title" [innerHTML]="dsoNameService.getName(object)"></span>
+        </h5>
+        <button type="button" class="btn btn-light" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <!-- <p #userinput> {{cirtation}}</p> -->
+            @for (item of citation; track $index) {
+            <div class="main-div">
+              <div class="key">{{ item[0] }}</div>
+              <div class="value">
+                <div [innerHTML]="item[1]" #userInput></div>
+                <i class="fa fa-copy ms-1" ngbTooltip="Copy" (click)="copyInputMessage(userInput)"></i>
+              </div>
+            </div>
+            }
+
+          </div>
+          <div class="col-12 d-flex border-top mt-3 pt-3">
+            <!-- <label class="form-check-label">Style</label> -->
+            <select class="form-control mr-3" [(ngModel)]="citationselection">
+              <option value="RefMan" selected>{{'home.label.refman' | translate}}</option>
+              <option value="EndNote">{{'home.label.endnote' | translate}}</option>
+              <option value="BibTeX">{{'home.label.bibteX' | translate}}</option>
+              <option value="xlsx">{{'home.label.expexcelxlxs' | translate}}</option>
+              <option value="csv">{{'home.label.expexcelcsv' | translate}}</option>
+            </select>
+            <button class="float-right mr-3 btn btn-secondary"
+              (click)="dowloadFile()">{{'item.edit.bitstreams.edit.buttons.download' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 </ng-template>

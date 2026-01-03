@@ -16,7 +16,7 @@
   }
   <div class="card-body">
     @if (linkType != linkTypes.None) {
-    <div class="card-title titleheight text-center">
+    <div class="card-title titleheight text-center text-primary">
       <a [target]="(linkType == linkTypes.ExternalLink) ? '_blank' : '_self'"
         [attr.rel]="(linkType == linkTypes.ExternalLink) ? 'noopener noreferrer' : null"
         [routerLink]="['/communities/', object.id]" class="h5 text-secondary">{{ dsoNameService.getName(object) }}</a>

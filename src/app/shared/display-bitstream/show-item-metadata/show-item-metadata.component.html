@@ -1,7 +1,7 @@
 @if(itemTab) {
 <div class="col-12" style="max-height: 77vh;overflow-y: auto;overflow-x: auto;">
     @if(itemTab.firstMetadataValue('dc.title')) {
-    <div class="row mb-2 p-0 item-list-abstract">
+    <div class="mb-2 p-0 item-list-abstract">
         <span class="text-secondary h6">{{'untypeitem.metadata.maintitle' | translate}} : </span>
         @for(title of itemTab.allMetadataValues('dc.title'); track title; let last = $last) {
         <span class="col-lg-12 slash text-black">{{ title }}</span>

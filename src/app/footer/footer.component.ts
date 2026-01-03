@@ -49,6 +49,7 @@ export class FooterComponent implements OnInit {
   showEndUserAgreement: boolean;
   showSendFeedback$: Observable<boolean>;
   coarLdnEnabled$: Observable<boolean>;
+  currentYear = new Date().getFullYear();
 
   constructor(
     @Optional() public cookies: OrejimeService,

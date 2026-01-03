@@ -101,3 +101,147 @@ new layout css blow
 .example-sidenav {
   padding: 20px;
 }
+
+.mobile-sidebar {
+  position: fixed;
+  // top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1000;
+  background: white;
+  overflow-y: auto;
+  padding-left: 3.2rem;
+}
+
+.desktop-sidebar {
+  height: auto;
+}
+
+.mobile-file-list {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.desktop-file-list {
+  max-height: 78vh;
+  overflow-y: auto;
+}
+
+.file-item {
+  // border-bottom: 1px solid #e9ecef;
+  transition: background-color 0.2s;
+}
+
+.file-item:hover {
+  background-color: #dee4eb;
+}
+
+.file-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 3px;
+  right: 10px;
+  z-index: 1001;
+}
+
+.close-btn, .open-btn {
+  // width: 30px;
+  // height: 25px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.close-btn:hover, .open-btn:hover {
+  transform: scale(1.1);
+}
+
+.mobile-menu-btn {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+}
+
+.viewer-container {
+  width: 100%;
+  height: 88vh;
+}
+
+.document-iframe {
+  width: 100%;
+  height: 88vh;
+}
+
+.pvt-viewer {
+  width: 100%;
+  height: 88vh;
+}
+
+.audio-container {
+  width: 100%;
+  padding: 20px;
+  height: auto;
+  min-height: 16vh;
+}
+
+.video-container {
+  width: 100%;
+  height: 88vh;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.side-panel {
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.sidebar-close-btn{
+  background: #f2f2f2;
+}
+
+/* Mobile Specific */
+@media (max-width: 767.98px) {
+  .viewer-container,
+  .document-iframe,
+  .pvt-viewer,
+  .video-container {
+    height: calc(100vh - 120px);
+  }
+  
+  .mobile-sidebar .nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  
+  .content-area {
+    padding: 0 8px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .viewer-container,
+  .document-iframe,
+  .pvt-viewer,
+  .video-container {
+    height: 80vh;
+  }
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+  .mobile-menu-btn {
+    display: none;
+  }
+}

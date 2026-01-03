@@ -1965,7 +1965,7 @@
 
   "footer.link.accessibility": "Accessibility settings",
 
-  "footer.link.dspace": "© 2025. UNESCO/IOC Project office for <a href='https://www.iode.org' target='_blank' rel='noopener noreferrer' class='text-white'>IODE</a> Oostende, Belgium.",
+  "footer.link.dspace": "©{{ year }}. UNESCO/IOC Project office for <a href='https://www.iode.org' target='_blank' rel='noopener noreferrer' class='text-white'>IODE</a> Oostende, Belgium.",
 
   "footer.link.lyrasis": "LYRASIS",
 
@@ -7511,4 +7511,6 @@
   "communityList.search.placeholder":"Seach Communities",
   "submission.sections.edit.info": "Click on edit button against each uploaded file and provide  there a description of the file uploaded eg.PDF; PDF [German Version] VIDEO_MP4 PDF {Chapter 4 only}",
   "home.label.downloadcount": "Download Count",
+  "bitstream.closeSidebar":"Close Sidebar",
+  "bitstream.openSidebar":"Open Sidebar"
 }

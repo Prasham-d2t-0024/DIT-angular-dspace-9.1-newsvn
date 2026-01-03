@@ -15,14 +15,14 @@
     @if (showLabel) {
       <ds-badges [object]="dso" [context]="context"></ds-badges>
     }
-    <h4 class="card-title">{{ dsoNameService.getName(dso) }}</h4>
+    <a class="h4 card-title" [routerLink]="['/communities/', dso.id]">{{ dsoNameService.getName(dso) }}</a>
     @if (dso.shortDescription) {
       <p class="card-text">{{dso.shortDescription}}</p>
     }
     @if (linkType !== linkTypes.None) {
-      <div class="text-center">
+      <!-- <div class="text-center">
         <a [target]="(linkType === linkTypes.ExternalLink) ? '_blank' : '_self'" [attr.rel]="(linkType === linkTypes.ExternalLink) ? 'noopener noreferrer' : null" [routerLink]="['/communities/', dso.id]" class="lead btn btn-primary viewButton">{{ 'search.results.view-result' | translate}}</a>
-      </div>
+      </div> -->
     }
   </div>
   <ng-content></ng-content>
