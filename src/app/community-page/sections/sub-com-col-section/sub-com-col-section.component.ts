@@ -1,5 +1,6 @@
 import { AsyncPipe, CommonModule, isPlatformBrowser } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -110,6 +111,7 @@ export class SubComColSectionComponent implements OnInit {
   @ViewChild('collectionTab') collectionTab: ElementRef;
 
   parentId:string;
+  selectedTab:string = 'home';
   constructor(private route: ActivatedRoute,
     private _router: Router,
     protected dsoService: DSpaceObjectDataService,
@@ -182,7 +184,7 @@ export class SubComColSectionComponent implements OnInit {
     this.parent$.subscribe(parentRD => {
       if (parentRD?.payload) {
         parentContextId = parentRD?.payload?.id;
-        this.parentId = parentRD?.payload?.id;
+        // this.parentId = parentRD?.payload?.id;
         observableCombineLatest([pagination$, sort$]).pipe(
           switchMap(([currentPagination, currentSort]) => {
             return this.cds.findByParent(parentContextId, {
@@ -194,25 +196,42 @@ export class SubComColSectionComponent implements OnInit {
         ).subscribe((results) => {
           this.subCommunitiesRDObs.next(results);
           this.totalCommunityElements = results.payload?.totalElements;
+          if(results.payload){
+            this.loadTabSelection();
+          }
           this.cdref.detectChanges();
         })
       }
     });
   }
 
-    ngAfterViewInit(): void {
+  loadTabSelection():void{
     if (isPlatformBrowser(this.platformId)) {
       setTimeout(() => {
-          if (this.totalCommunityElements > 0 && this.communityTab) {
-            this.communityTab.nativeElement.click();
-            this.cdref.detectChanges();
-          } else if (this.collectionTab) {
-            this.collectionTab.nativeElement.click();
-            this.cdref.detectChanges();
-          }
-        }, 300);
+        if (this.totalCommunityElements > 0 && this.communityTab) {
+          this.handleTabSelection('home');
+        } else if (this.collectionTab) {
+          this.handleTabSelection('trending');
+        }
+        this.cdref.detectChanges();
+      }, 300);
     }
   }
 
+  handleTabSelection(tabName: string): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.selectedTab = tabName;
+      if(this.selectedTab == 'home' && this.communityTab){
+        this.communityTab.nativeElement.classList.add('current');
+        this.collectionTab.nativeElement.classList.remove('current');
+      }else if(this.selectedTab == 'trending' && this.collectionTab){
+        this.collectionTab.nativeElement.classList.add('current');
+        this.communityTab.nativeElement.classList.remove('current');
+      }
+      this.cdref.detectChanges();
+    }
+  }
+   ngOnDestroy(): void {
+    this.paginationService.clearPagination(this.config.id);
+  }
 }
-

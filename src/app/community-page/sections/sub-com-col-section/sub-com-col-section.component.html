@@ -12,13 +12,13 @@
               <ng-container *ngIf="(parent$ | async) as parent">
                 <ng-container *ngIf="parent?.payload as parentContext">
                   <section class="d-flex justify-content-between border-bottom mb-4 pt-2">
-                    <div class="d-flex gapx-3">
-                      <div class="d-inline-flex">
+                    <div class="d-flex gapx-3 flex-column flex-md-row align-items-center">
+                      <div class="col-12 col-md-3 d-inline-flex justify-content-center">
                         <ds-comcol-page-logo *ngIf="logoRD$" [logo]="(logoRD$ | async)?.payload"
                           [alternateText]="'Community Logo'">
                         </ds-comcol-page-logo>
                       </div>
-                      <div class="d-inline-flex ps-md-0 pt-2">
+                      <div class="col-12 col-md-3 d-inline-flex ps-md-0 pt-2">
                         <header class="comcol-header">
                           <ds-comcol-page-header [name]="dsoNameService.getName(parentContext)"></ds-comcol-page-header>
                           <ds-base-comcol-page-handle [content]="parentContext.handle"
@@ -45,34 +45,48 @@
                           <div class="col-md-12">
                             <div class="tab-nav-band">
                               <button #communityTab class="tablink1 current"
-                                onclick="CollectionMainTab1(event,'home')">Community</button>
+                                (click)="handleTabSelection('home')">Community</button>
                               <button #collectionTab class="tablink1"
-                                onclick="CollectionMainTab1(event,'trending')">Collection</button>
+                                (click)="handleTabSelection('trending')">Collection</button>
                             </div>
-                            <div id="home" class="text-band1">
-                              <ng-container *ngIf="(subCommunitiesRDObs | async) as subCommunitiesRD">
-                                <div
-                                  *ngIf="subCommunitiesRD?.hasSucceeded && subCommunitiesRD?.payload.totalElements === 0">
-                                  <h6>There is no community in {{parentContext.name}}</h6>
-                                </div>
-                                <div class="sub-communitiesList"
-                                  *ngIf="subCommunitiesRD?.hasSucceeded && subCommunitiesRD?.payload.totalElements > 0"
-                                  @fadeIn>
-                                  <h4>{{'community.sub-community-list.head' | translate}}</h4>
-                                  <ds-viewable-collection [config]="config" [sortConfig]="sortConfig"
-                                    [objects]="subCommunitiesRD" [hideGear]="false">
-                                  </ds-viewable-collection>
-                                </div>
-                                <ds-error *ngIf="subCommunitiesRD?.hasFailed"
-                                  message="{{'error.sub-communities' | translate}}"></ds-error>
-                                <ds-loading *ngIf="subCommunitiesRD?.isLoading"
-                                  message="{{'loading.sub-communities' | translate}}"></ds-loading>
-                              </ng-container>
-                            </div>
-                            <div id="trending" class="text-band1">
-                              <ds-community-page-sub-collection-list [community]="parentContext">
-                              </ds-community-page-sub-collection-list>
-                            </div>
+                            @if(selectedTab == 'home'){
+                              <div id="home" class="text-band1">
+                                @if ((subCommunitiesRDObs | async); as subCommunitiesRD) {
+                                  @if (subCommunitiesRD?.hasSucceeded && subCommunitiesRD?.payload.totalElements === 0) {
+                                    <div>
+                                      <h6>There is no community in {{parentContext.name}}</h6>
+                                    </div>
+                                  }
+                                  @if (subCommunitiesRD?.hasSucceeded && subCommunitiesRD?.payload.totalElements > 0) {
+                                    <div class="sub-communitiesList"
+                                         @fadeIn>
+                                      <h4>{{'community.sub-community-list.head' | translate}}</h4>
+                                      <ds-viewable-collection
+                                        [config]="config"
+                                        [sortConfig]="sortConfig"
+                                        [objects]="subCommunitiesRD"
+                                        [hideGear]="false">
+                                      </ds-viewable-collection>
+                                    </div>
+                                  }
+                                  @if (subCommunitiesRD?.hasFailed) {
+                                    <ds-error
+                                      message="{{'error.sub-communities' | translate}}">
+                                    </ds-error>
+                                  }
+                                  @if (subCommunitiesRD?.isLoading) {
+                                    <ds-loading
+                                      message="{{'loading.sub-communities' | translate}}">
+                                    </ds-loading>
+                                  }
+                                }
+                              </div>
+                            }@else if(selectedTab == 'trending'){
+                              <div id="trending" class="text-band1">
+                                <ds-community-page-sub-collection-list [community]="parentContext">
+                                </ds-community-page-sub-collection-list>
+                              </div>
+                            }
                           </div>
                         </div>
                       </div>

@@ -7512,5 +7512,6 @@
   "submission.sections.edit.info": "Click on edit button against each uploaded file and provide  there a description of the file uploaded eg.PDF; PDF [German Version] VIDEO_MP4 PDF {Chapter 4 only}",
   "home.label.downloadcount": "Download Count",
   "bitstream.closeSidebar":"Close Sidebar",
-  "bitstream.openSidebar":"Open Sidebar"
+  "bitstream.openSidebar":"Open Sidebar",
+  "home.label.itemcount": "Item Count"
 }
