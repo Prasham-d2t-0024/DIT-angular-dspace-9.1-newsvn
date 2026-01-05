@@ -14,8 +14,8 @@
                 @if (collectionRD?.payload; as collection) {
                 <div>
                   <section class="d-flex justify-content-between  border-bottom mb-4 pt-2">
-                    <div class="d-flex gapx-3  flex-column flex-md-row align-items-center">
-                      <div class="col-12 col-md-3 d-inline-flex justify-content-center">
+                    <div class="d-flex gapx-3 flex-column flex-md-row align-items-center">
+                      <div class="col-12 col-md-2 d-inline-flex justify-content-center">
                         <!-- Collection logo -->
                          @if (logoRD$) {
                         <ds-comcol-page-logo [logo]="(logoRD$ | async)?.payload"
@@ -26,7 +26,7 @@
                         </ds-comcol-page-logo>
                         }
                       </div>
-                      <div class="col-12 col-md-3 d-inline-flex ps-md-0">
+                      <div class="col-12 col-md-9 d-inline-flex ps-md-0">
                         <header class="comcol-header mr-auto">
                           <!-- Collection name -->
                           <ds-comcol-page-header [name]="dsoNameService.getName(collection)">
