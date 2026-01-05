@@ -111,6 +111,8 @@ export class DisplayBitstreamComponent implements OnInit, AfterViewInit {
   safeUrl: any;
   showPVTFile:boolean;
   isMobileView = false;
+  downloadEventMap: Map<string, boolean> = new Map();
+  currentBitstreamId: string = null;
   @ViewChild('videoPlayer') videoPlayer: ElementRef<HTMLVideoElement>;
   @ViewChild('audioPlayer') audioPlayer: ElementRef<HTMLVideoElement>;
   constructor(
@@ -144,7 +146,13 @@ export class DisplayBitstreamComponent implements OnInit, AfterViewInit {
   public callme(): void {
     this.route.data.subscribe((data: Data) => {
       this.bistremobj = data.bitstream.payload;
-      this.updateDownloadCount(this.bistremobj);
+      this.currentBitstreamId = this.bistremobj?.id;
+      const bitstreamId = this.bistremobj.id;
+      if (!this.downloadEventMap.has(bitstreamId) || !this.downloadEventMap.get(bitstreamId)) {
+        this.updateDownloadCount(this.bistremobj);
+        this.downloadEventMap.set(bitstreamId, true);
+      }
+      
       this.getBistreamPAth(this.bistremobj);
     })
   }
@@ -287,6 +295,7 @@ export class DisplayBitstreamComponent implements OnInit, AfterViewInit {
     // window.oncontextmenu = function () {
     //   return false;
     // }
+    this.downloadEventMap = new Map();
     this.route.queryParams.subscribe((params) => {
       if (hasValue(params.itemid)) {
         this.itemid = params.itemid;
@@ -331,13 +340,19 @@ export class DisplayBitstreamComponent implements OnInit, AfterViewInit {
       getFirstSucceededRemoteData(),
       getRemoteDataPayload(),
     ).subscribe((response: Bitstream) => {
+      const bitstreamId = response.id;
+      this.currentBitstreamId = response.id;
+      if (!this.downloadEventMap.has(bitstreamId) || !this.downloadEventMap.get(bitstreamId)) {
+        this.updateDownloadCount(response);
+        this.downloadEventMap.set(bitstreamId, true);
+      }
       this.authorizationService.isAuthorized(FeatureID.CanDownload, isNotEmpty(response) ? response.self : undefined)
       this.auth.getShortlivedToken().pipe(take(1), map((token) =>
         hasValue(token) ? new URLCombiner(response._links.content.href, `?authentication-token=${token}`).toString() : response._links.content.href)).subscribe((logs: string) => {
           this.printFile = logs;
           this.pdfViewer.pdfSrc = logs; // pdfSrc can be Blob or Uint8Array
           this.pdfViewer.refresh();
-          fetch(logs + '&isDownload=true')
+          fetch(logs)
             .then(res => res.blob())   // get response as a Blob
             .then(blob => {
               console.log('PDF Blob:', blob);

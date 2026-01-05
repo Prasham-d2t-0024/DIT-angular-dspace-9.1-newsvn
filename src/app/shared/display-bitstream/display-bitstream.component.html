@@ -132,7 +132,7 @@
                   <div [ngClass]="isMobileView ? 'mobile-file-list' : 'desktop-file-list'">
                     <div class="file-list">
                       @for (file of originals?.page; track file; let i = $index) {
-                        <div class="file-item d-flex justify-content-between align-items-center py-2 px-1">
+                        <div class="file-item d-flex justify-content-between align-items-center py-2 px-1" [class.active]="file.id === currentBitstreamId">
                           <a 
                             style="cursor: pointer; flex: 1;" 
                             (click)="showpdf(file); isMobileView && fullleftC()" 

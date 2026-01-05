@@ -240,7 +240,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
           };
 
           const TopItems:any = {
-            label: 'Top Items',
+            label: 'Top Downloads',
             count: 50,
           }
 

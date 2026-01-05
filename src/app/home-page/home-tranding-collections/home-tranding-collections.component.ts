@@ -11,6 +11,7 @@ import { FeatureID } from 'src/app/core/data/feature-authorization/feature-id';
 import { FindListOptions } from 'src/app/core/data/find-list-options.model';
 import { ChartService } from 'src/app/core/shared/trending-charts/chart.service';
 import { URLCombiner } from 'src/app/core/url-combiner/url-combiner';
+import { DisplayMapComponent } from 'src/app/shared/display-map/display-map.component';
 import { hasValue } from 'src/app/shared/empty.util';
 
 declare var $: any;
@@ -23,7 +24,8 @@ declare var $: any;
     NgbTooltipModule,
     RouterModule,
     NgbModule,
-    NgxChartsModule
+    NgxChartsModule,
+    DisplayMapComponent
   ],
   templateUrl: './home-tranding-collections.component.html',
   styleUrl: './home-tranding-collections.component.scss'
@@ -60,7 +62,7 @@ export class HomeTrandingCollectionsComponent {
 
   colorScheme = 'aqua';
   colorScheme1 = {
-    domain: ['#004960'],
+    domain: ['#3a406d'],
   };
 
   config: FindListOptions = Object.assign(new FindListOptions(), {
