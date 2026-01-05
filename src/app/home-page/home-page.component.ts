@@ -77,7 +77,7 @@ import { ItemDataService } from '../core/data/item-data.service';
     HomeTrandingTypesComponent,
     HomeTrandingCommunitiesComponent,
   ],
-    providers: [
+  providers: [
     {
       provide: FILTER_CONFIG,
       useValue: SearchFilterConfig
@@ -91,8 +91,8 @@ import { ItemDataService } from '../core/data/item-data.service';
       useValue: SearchFilterConfig
     },
     {
-      provide:SEARCH_CONFIG_SERVICE,
-      useValue:SearchConfigurationService
+      provide: SEARCH_CONFIG_SERVICE,
+      useValue: SearchConfigurationService
     }
   ]
 })
@@ -147,7 +147,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
       this.visible = isCollapsed;
     });
   }
-  
+
 
   ngOnInit(): void {
     this.site$ = this.route.data.pipe(
@@ -158,7 +158,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     this.homePageLayoutConfig = this.imageConfig.homePageLayoutConfig;
 
     setTimeout(() => {
-      if(this.homePageLayoutConfig.showBanner){
+      if (this.homePageLayoutConfig.showBanner) {
         const backdrop = document.querySelector('.backdrop') as HTMLElement;
         const searchBarWrapper = document.querySelector('.search-bar-wrapper') as HTMLElement;
         if (backdrop && this.homepageImagePath) {
@@ -173,7 +173,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-     this.searchFilter = this.getSearchFilter();
+    this.searchFilter = this.getSearchFilter();
     this.objectInjector = Injector.create({
       providers: [
         { provide: FILTER_CONFIG, useFactory: () => (this.filterConfig), deps: [] },
@@ -182,20 +182,20 @@ export class HomePageComponent implements OnInit, AfterViewInit {
       ],
       parent: this.injector
     });
-    
+
     this.advSearchForm = this.formBuilder.group({
       textsearch1: new FormControl('', {}),
       textsearch2: new FormControl('', {
-        
+
       }),
       textsearch3: new FormControl('', {
-       
+
       }),
       filter1: new FormControl('title', {}),
       filter2: new FormControl('author', {
-        
+
       }),
-      filter3: new FormControl('subject',{}),
+      filter3: new FormControl('subject', {}),
       language: new FormControl('123', {}),
       edspartner: new FormControl('123', {}),
       ContentTYPE: new FormControl('123', {}),
@@ -203,9 +203,9 @@ export class HomePageComponent implements OnInit, AfterViewInit {
       mindate: new FormControl('', {}),
       formate: new FormControl('123', {}),
     });
-    
+
     this.searchConfigService.setPaginationId('spc');
-  //  this.filter.name = 'subject';
+    //  this.filter.name = 'subject';
     this.site$ = this.route.data.pipe(
       map((data) => data.site as Site),
     );
@@ -215,66 +215,70 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     ).subscribe((filtersRD: RemoteData<SearchFilterConfig[]>) => {
       this.allFilters = filtersRD.payload;
       this.filter = filtersRD.payload.find(x => x.name === 'itemtype');
-      //console.log(this.filter);
-      this.filter.pageSize = 100;
-      
-      this.searchService.getFacetValuesFor(this.filter, 1, null).pipe(getFirstSucceededRemoteData()).subscribe((rd: any) => {
-        const original = rd.payload.page as any[];
-        const sorted = [...original].sort((a, b) => a.label.localeCompare(b.label));
 
-        this.itemDataService.getTotalItemsCount().pipe(
-          getFirstSucceededRemoteData(),
-          take(1)
+      // Fetch item types for contenttype (used by search form)
+      if (this.filter) {
+        this.filter.pageSize = 100;
+        this.searchService.getFacetValuesFor(this.filter, 1, null).pipe(
+          getFirstSucceededRemoteData()
         ).subscribe((rd: any) => {
-          const data = rd?.payload || 0;
-          this.totalItemsCount = Number(data?.count) || 0;
-          const totalItem: any = {
-            label: 'Total Items',
-            count: this.totalItemsCount,
-          };
-
-          let endourcedByCount = Number(data?.externalby) || 0;
-           const totalEndourcedByCount: any = {
-            label: 'Total Endorsed By Count',
-            count: endourcedByCount,
-          };
-
-          const TopItems:any = {
-            label: 'Top Downloads',
-            count: 50,
-          }
-
-          const a = [...sorted, totalItem, TopItems, totalEndourcedByCount];
-          this.contenttype = a;
-
-          this.dctype = [];
-          this.isXsOrSm$.pipe(take(1)).subscribe((mobile) => {
-            if (mobile) {
-              for (let i = 0; i < a.length; i += 1) {
-                this.dctype.push(a.slice(i, i + 1));
-              }
-            } else {
-              for (let i = 0; i < a.length; i += 6) {
-                this.dctype.push(a.slice(i, i + 6));
-              }
-            }
-          });
+          const original = rd.payload.page as any[];
+          const sorted = [...original].sort((a, b) => a.label.localeCompare(b.label));
+          this.contenttype = sorted; // Keep for search form
         });
-      })
-      
-    })
+      }
+    });
+
+    this.itemDataService.getTotalItemsCount().pipe(
+      getFirstSucceededRemoteData(),
+      take(1)
+    ).subscribe((rd: any) => {
+      const data = rd?.payload || 0;
+      this.totalItemsCount = Number(data?.count) || 0;
+
+      const totalItem: any = {
+        label: 'Total Items',
+        count: this.totalItemsCount,
+      };
+
+      let endourcedByCount = Number(data?.externalby) || 0;
+      const totalEndourcedByCount: any = {
+        label: 'Total Endorsed By Count',
+        count: endourcedByCount,
+      };
+
+      const TopItems: any = {
+        label: 'Top Downloads',
+        count: 50,
+      };
+
+      // Only these 3 items for carousel
+      const carouselItems = [totalItem, totalEndourcedByCount, TopItems];
+
+      // Prepare carousel slides
+      this.dctype = [];
+      this.isXsOrSm$.pipe(take(1)).subscribe((mobile) => {
+        if (mobile) {
+          for (let i = 0; i < carouselItems.length; i += 1) {
+            this.dctype.push(carouselItems.slice(i, i + 1));
+          }
+        } else {
+          this.dctype.push(carouselItems);
+        }
+      });
+    });
     this.searchOptions$ = this.searchConfigService.searchOptions;
   }
 
-   /**
-   * Find the correct component based on the filter config's type
-   */
- private getSearchFilter() {
-  const type: FilterType = this.filterConfig.filterType;
-  return renderFilterType(type);
-}
+  /**
+  * Find the correct component based on the filter config's type
+  */
+  private getSearchFilter() {
+    const type: FilterType = this.filterConfig.filterType;
+    return renderFilterType(type);
+  }
 
-  
+
   public geticon(filtername) {
     if (filtername.includes('Communication')) {
       return 'fa fa-video-camera img';
@@ -292,11 +296,11 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   }
 
   gotsearchpage(query) {
-    if(query.length){
+    if (query.length) {
       let data = query.split('=');
       const queryParams = { [data[0]]: decodeURI(data[1]) };
       this._router.navigate(['/search'], { queryParams });
-    }else{
+    } else {
       this._router.navigate(['/top-trending-items']);
       // const url = this._router.serializeUrl(
       //   this._router.createUrlTree(['/top-trending-items'])
@@ -306,9 +310,9 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     }
   }
 
-   /**
-   * Set the sidebar to a collapsed state
-   */
+  /**
+  * Set the sidebar to a collapsed state
+  */
   public toggleSidebar(): void {
     this.visible = !this.visible;
   }

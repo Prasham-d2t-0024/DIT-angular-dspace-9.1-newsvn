@@ -770,3 +770,53 @@ tr td {
         width: 33%;
     }
 }
+
+// Fix for 3-item carousel - center items and remove empty space
+.carousel-resource-cards {
+  .carousel-section {
+    .carousel-inner {
+      .carousel-item {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .carouselsection-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 1200px;
+      margin: 10px auto 15px;
+      
+      // Desktop - center 3 items with proper spacing
+      @media screen and (min-width: map-get($grid-breakpoints, lg)) {
+        gap: 60px;
+        
+        > div {
+          flex: 0 0 auto;
+          width: 250px;
+          max-width: 250px;
+        }
+      }
+
+      // Mobile - full width
+      @media screen and (max-width: #{map-get($grid-breakpoints, lg) - 1px}) {
+        > div {
+          width: 100%;
+          max-width: 100%;
+        }
+      }
+    }
+  }
+
+  // Hide carousel controls if only one slide
+  :host::ng-deep {
+    .carousel-control-prev,
+    .carousel-control-next {
+      @media screen and (min-width: map-get($grid-breakpoints, lg)) {
+        display: none !important;
+      }
+    }
+  }
+}
