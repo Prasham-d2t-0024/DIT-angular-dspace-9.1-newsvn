@@ -12,7 +12,7 @@
     </span>
   }
   <div class="card-body">
-    <a class="card-title h4 text-primary" [routerLink]="['/collections/', object.id]">{{ dsoNameService.getName(object) }}</a>
+    <a class="card-title h4 text-primary" [routerLink]="['/collections/', object.id, 'search']">{{ dsoNameService.getName(object) }}</a>
     @if (object.shortDescription) {
       <p class="card-text">{{object.shortDescription}}</p>
     }

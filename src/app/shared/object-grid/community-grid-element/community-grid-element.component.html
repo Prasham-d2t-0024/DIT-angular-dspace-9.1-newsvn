@@ -2,7 +2,7 @@
   @if (linkType !== linkTypes.None) {
   <a [target]="(linkType === linkTypes.ExternalLink) ? '_blank' : '_self'"
     [attr.rel]="(linkType === linkTypes.ExternalLink) ? 'noopener noreferrer' : null"
-    [routerLink]="['/communities/', object.id]" class="card-img-top"
+    [routerLink]="['/communities/', object.id, 'search']" class="card-img-top"
     [attr.title]="'search.results.view-result' | translate">
     <ds-thumbnail fromCommunity="true" [thumbnail]="(object.logo | async)?.payload" [limitWidth]="false">
     </ds-thumbnail>
@@ -19,7 +19,7 @@
     <div class="card-title titleheight text-center text-primary">
       <a [target]="(linkType == linkTypes.ExternalLink) ? '_blank' : '_self'"
         [attr.rel]="(linkType == linkTypes.ExternalLink) ? 'noopener noreferrer' : null"
-        [routerLink]="['/communities/', object.id]" class="h5 text-secondary">{{ dsoNameService.getName(object) }}</a>
+        [routerLink]="['/communities/', object.id, 'search']" class="h5 text-secondary">{{ dsoNameService.getName(object) }}</a>
     </div>
     }
     </div>

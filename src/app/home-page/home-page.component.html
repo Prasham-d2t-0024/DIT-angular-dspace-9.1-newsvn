@@ -84,7 +84,7 @@
                   <div [ngClass]="{
                           'col-lg-2': !(isXsOrSm$ | async),
                           'col-lg-12': (isXsOrSm$ | async)
-                        }" class="p-3" (click)="gotsearchpage(filter?._links ? filter?._links?.search?.href?.split('?')[1] : '')">
+                        }" class="p-3" (click)="gotsearchpage(filter?._links ? filter?._links?.search?.href?.split('?')[1] : filter?.searchLink)">
             
                     <div class="d-flex flex-column h-100 justify-content-center image-card">
                       <div class="d-flex align-items-center justify-content-center image-placeholder">

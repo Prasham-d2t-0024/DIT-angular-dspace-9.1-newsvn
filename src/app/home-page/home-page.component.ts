@@ -239,17 +239,20 @@ export class HomePageComponent implements OnInit, AfterViewInit {
       const totalItem: any = {
         label: 'Total Items',
         count: this.totalItemsCount,
+        searchLink:''
       };
 
       let endourcedByCount = Number(data?.externalby) || 0;
       const totalEndourcedByCount: any = {
         label: 'Total Endorsed By Count',
         count: endourcedByCount,
+        searchLink:''
       };
 
       const TopItems: any = {
         label: 'Top Downloads',
         count: 50,
+        searchLink:'/top-trending-items'
       };
 
       // Only these 3 items for carousel
@@ -297,11 +300,12 @@ export class HomePageComponent implements OnInit, AfterViewInit {
 
   gotsearchpage(query) {
     if (query.length) {
-      let data = query.split('=');
-      const queryParams = { [data[0]]: decodeURI(data[1]) };
-      this._router.navigate(['/search'], { queryParams });
+      // let data = query.split('=');
+      // const queryParams = { [data[0]]: decodeURI(data[1]) };
+      // this._router.navigate(['/search'], { queryParams });
+      this._router.navigate([query]);
     } else {
-      this._router.navigate(['/top-trending-items']);
+      return;
       // const url = this._router.serializeUrl(
       //   this._router.createUrlTree(['/top-trending-items'])
       // );

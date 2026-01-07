@@ -75,7 +75,7 @@
       <div class="d-flex flex-row">
         <span class="d-flex align-middle my-auto">
           
-          <a [routerLink]="node.route" class="lead" role="link" tabindex="0">{{ node?.payload ? dsoNameService.getName(node.payload) : node?.name }}</a>
+          <a [routerLink]="[node.route, 'search']" class="lead" role="link" tabindex="0">{{ node?.payload ? dsoNameService.getName(node.payload) : node?.name }}</a>
           <span class="pe-2">&nbsp;</span>
           @if (node?.payload?.archivedItemsCount >= 0 || node?.archivedItemsCount >= 0) {
             <span class="badge rounded-pill bg-secondary align-top archived-items-lead my-auto ps-2 pe-2">{{node?.payload?.archivedItemsCount ?? node?.archivedItemsCount}}</span>
@@ -115,7 +115,7 @@
         <span class="fa fa-chevron-right"></span>
       </span>
       <h6 class="align-middle my-auto">
-        <a [routerLink]="node.route" class="lead" role="link" tabindex="0">{{ node?.payload ? dsoNameService.getName(node.payload) : node?.name }}</a>
+        <a [routerLink]="[node.route, 'search']" class="lead" role="link" tabindex="0">{{ node?.payload ? dsoNameService.getName(node.payload) : node?.name }}</a>
       </h6>
     </div>
     <ds-truncatable [id]="node.id">

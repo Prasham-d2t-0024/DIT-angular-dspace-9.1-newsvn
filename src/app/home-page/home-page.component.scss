@@ -820,3 +820,12 @@ tr td {
     }
   }
 }
+
+:host ::ng-deep {
+  @media (min-width: map-get($grid-breakpoints, lg)) {
+    .carousel-control-prev,
+    .carousel-control-next {
+      display: none !important;
+    }
+  }
+}
