@@ -379,6 +379,11 @@ export class SearchFormComponent implements OnChanges, OnInit {
     this.selectedMetadata = this.metadataFields.find(field => field.label === value)?.filterKey || '';
   }
 
+  getPlaceholder(): string {
+    const metadata = this.metadataFields.find(field => field.label === this.selectedMetadataValue)?.description;
+    return metadata || this.searchPlaceholder;
+  }
+
   sanitizeDescription(desc: string): string {
     return desc?.replace(/<br\s*\/?>/gi, ' ');
   }

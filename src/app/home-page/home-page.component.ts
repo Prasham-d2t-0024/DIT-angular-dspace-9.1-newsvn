@@ -244,7 +244,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
 
       let endourcedByCount = Number(data?.externalby) || 0;
       const totalEndourcedByCount: any = {
-        label: 'Total Endorsed By Count',
+        label: 'Total Endorsed',
         count: endourcedByCount,
         searchLink:''
       };
@@ -256,7 +256,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
       };
 
       // Only these 3 items for carousel
-      const carouselItems = [totalItem, totalEndourcedByCount, TopItems];
+      const carouselItems = [totalItem, totalEndourcedByCount];
 
       // Prepare carousel slides
       this.dctype = [];
