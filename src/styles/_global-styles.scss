@@ -725,7 +725,7 @@ ngb-tooltip-window {
 
   .custom-legend-item {
     flex: 0 0 calc(25% - 5px);
-    max-width: calc(25% - 5px);
+    max-width: calc(23% - 5px);
     justify-content: center;
     margin-bottom: 5px;
   }
@@ -981,4 +981,15 @@ ngb-tooltip-window {
 
 .carousel-indicators{
   display: none;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .itemdetail-footer-actions .action-row .footeractions-left, .itemdetail-footer-actions .action-row .footeractions-right {
+      display: flex;
+      max-width: 100%;
+  }
+}
+
+.border-right {
+    border-right: 1px solid #dee2e6 !important;
 }

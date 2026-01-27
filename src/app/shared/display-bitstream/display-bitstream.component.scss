@@ -221,7 +221,7 @@ new layout css blow
   
   .mobile-sidebar .nav-tabs {
     flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow: auto hidden;
   }
   
   .content-area {

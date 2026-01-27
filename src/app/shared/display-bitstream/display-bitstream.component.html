@@ -188,73 +188,75 @@
         </button>
       }
 
-      <div class="viewer-body">
-        <ng-container>
-          <!-- Loading State -->
-          @if (isLoading) {
-            <ds-loading [showMessage]="false"></ds-loading>
-          }
-
-          <!-- PDF Viewer -->
-          @if (!player3 && !player4 && !isLoading) {
-            <div class="viewer-container">
-              @if (!showPVTFile && !pdfviwerhide && !player3 && !player4) {
-                <ng2-pdfjs-viewer 
-                  #pdfViewer 
-                  [download]="false" 
-                  [print]="false" 
-                  [openFile]="false" 
-                  [fullScreen]="false"
-                  [viewBookmark]="false" 
-                  [showSpinner]="true" 
-                  downloadFileName="currentFileViewing">
-                </ng2-pdfjs-viewer>
-              }
-              
-              @if (showPVTFile) {
-                <div #viewerContainer class="pvt-viewer"></div>
-              }
-              
-              @if (pdfviwerhide && !player3 && !player4) {
-                <iframe 
-                  #iframe 
-                  class="document-iframe" 
-                  [src]="safeUrl" 
-                  frameborder="0">
-                </iframe>
-              }
-            </div>
-          }
-
-          <!-- Audio Player -->
-          @if (pdfviwerhide && player3 && !player4 && !isLoading) {
-            <div class="audio-container">
-              <audio 
-                controls 
-                controlsList="nodownload" 
-                #audioPlayer 
-                class="w-100">
-                <source [src]="filePath" type="audio/mpeg">
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-          }
-
-          <!-- Video Player -->
-          @if (pdfviwerhide && !player3 && player4 && !isLoading) {
-            <div class="video-container">
-              <video 
-                controls 
-                controlsList="nodownload" 
-                #videoPlayer 
-                class="w-100 h-100">
-                <source [src]="filePath" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          }
-        </ng-container>
-      </div>
+      @if((!leftOpen && isMobileView) || !isMobileView){
+        <div class="viewer-body">
+          <ng-container>
+            <!-- Loading State -->
+            @if (isLoading) {
+              <ds-loading [showMessage]="false"></ds-loading>
+            }
+  
+            <!-- PDF Viewer -->
+            @if (!player3 && !player4 && !isLoading) {
+              <div class="viewer-container">
+                @if (!showPVTFile && !pdfviwerhide && !player3 && !player4) {
+                  <ng2-pdfjs-viewer 
+                    #pdfViewer 
+                    [download]="false" 
+                    [print]="false" 
+                    [openFile]="false" 
+                    [fullScreen]="false"
+                    [viewBookmark]="false" 
+                    [showSpinner]="true" 
+                    downloadFileName="currentFileViewing">
+                  </ng2-pdfjs-viewer>
+                }
+                
+                @if (showPVTFile) {
+                  <div #viewerContainer class="pvt-viewer"></div>
+                }
+                
+                @if (pdfviwerhide && !player3 && !player4) {
+                  <iframe 
+                    #iframe 
+                    class="document-iframe" 
+                    [src]="safeUrl" 
+                    frameborder="0">
+                  </iframe>
+                }
+              </div>
+            }
+  
+            <!-- Audio Player -->
+            @if (pdfviwerhide && player3 && !player4 && !isLoading) {
+              <div class="audio-container">
+                <audio 
+                  controls 
+                  controlsList="nodownload" 
+                  #audioPlayer 
+                  class="w-100">
+                  <source [src]="filePath" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            }
+  
+            <!-- Video Player -->
+            @if (pdfviwerhide && !player3 && player4 && !isLoading) {
+              <div class="video-container">
+                <video 
+                  controls 
+                  controlsList="nodownload" 
+                  #videoPlayer 
+                  class="w-100 h-100">
+                  <source [src]="filePath" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            }
+          </ng-container>
+        </div>
+      }
     </div>
   </div>
 </div>
