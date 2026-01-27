@@ -88,7 +88,7 @@ background: linear-gradient(90deg, var(--ds-primary-color) 0%, var(--ds-primary-
         margin: 10px 15px 15px;
 
         .image-card {
-            cursor: pointer;
+            // cursor: pointer;
             color: white;
             &::before, &::after {
                 display: none;
