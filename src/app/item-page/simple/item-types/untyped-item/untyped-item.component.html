@@ -776,16 +776,15 @@
               <span *ngIf="!last"> | </span>
             </ng-container>
           </div>
-          <div class="col-lg-12 mb-2 p-0 item-list-abstract"
+          <!-- <div class="col-lg-12 mb-2 p-0 item-list-abstract"
             *ngIf="object.firstMetadataValue('obps.endorsementAuthorDeclared.recommendedPractice')">
             <span class="text-secondary h6">{{'untypeitem.metadata.recommendedPractice' | translate}}: </span>
             <ng-container
               *ngFor="let practice of object.allMetadataValues('obps.endorsementAuthorDeclared.recommendedPractice'); let last = last;">
-              <!-- <a [href]="practice" target="_blank">{{practice}}</a> -->
               <span>{{practice}}</span>
               <span *ngIf="!last"> | </span>
             </ng-container>
-          </div>
+          </div> -->
           <div class="col-lg-12 mb-2 p-0 item-list-abstract"
             *ngIf="object.firstMetadataValue('obps.endorsementAuthorDeclared.bestPractice')">
             <span class="text-secondary h6">{{'untypeitem.metadata.bestPractice' | translate}}: </span>
